@@ -20,7 +20,7 @@ void main()
         {
             if (GetScriptHidden(oNpc))
             {
-                SetScriptHidden(oNpc, FALSE, TRUE);
+                SetScriptHidden(oNpc, FALSE, FALSE);
             }
             SignalEvent(oNpc, EventUserDefined(AL_EVT_RESYNC));
         }

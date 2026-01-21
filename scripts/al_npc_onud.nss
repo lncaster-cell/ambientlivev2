@@ -15,7 +15,7 @@ int AL_GetAmbientLifeDaySeconds()
 
 int AL_GetRepeatAnimIntervalSeconds()
 {
-    return 5 + Random(8);
+    return 15 + Random(16);
 }
 
 int AL_IsRepeatAnimCoolingDown(object oNpc)

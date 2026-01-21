@@ -1,9 +1,9 @@
 // NPC OnSpawn: attach to NPC OnSpawn in the toolset.
 
-#include "AL_Constants_Inc"
-#include "AL_NPC_Activities_Inc"
-#include "AL_NPC_Registry_Inc"
-#include "AL_Role_Activities_Inc"
+#include "al_constants_inc"
+#include "al_npc_activities_inc"
+#include "al_npc_registry_inc"
+#include "al_role_activities_inc"
 
 void AL_InitTrainingPartner(object oNpc)
 {

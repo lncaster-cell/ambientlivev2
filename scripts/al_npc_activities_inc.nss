@@ -1,8 +1,8 @@
 // NPC activity helpers: apply per-slot activity animations without tag searches.
 
-#include "AL_Activities_Inc"
-#include "AL_Constants_Inc"
-#include "AL_NPC_Routes_Inc"
+#include "al_activities_inc"
+#include "al_constants_inc"
+#include "al_npc_routes_inc"
 
 string AL_GetActivitySlotKey(int nSlot)
 {

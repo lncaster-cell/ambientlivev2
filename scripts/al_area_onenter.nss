@@ -1,8 +1,8 @@
 // Area OnEnter: attach to the Area OnEnter event in the toolset.
 
-#include "AL_Constants_Inc"
-#include "AL_Area_Tick_Inc"
-#include "AL_NPC_Registry_Inc"
+#include "al_constants_inc"
+#include "al_area_tick_inc"
+#include "al_npc_registry_inc"
 
 void AL_CacheTrainingPartners(object oArea)
 {

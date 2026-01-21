@@ -1,6 +1,6 @@
 // Area OnExit: attach to the Area OnExit event in the toolset.
 
-#include "AL_NPC_Registry_Inc"
+#include "al_npc_registry_inc"
 
 void main()
 {

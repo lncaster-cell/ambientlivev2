@@ -1,5 +1,5 @@
-#include "AL_Constants_Inc"
-#include "AL_NPC_Registry_Inc"
+#include "al_constants_inc"
+#include "al_npc_registry_inc"
 
 // Shared Area tick helper: scheduled every 45s while players are present.
 // NPC registry synchronization is handled here at the area level only.

@@ -109,7 +109,7 @@ string AL_GetActivityCustomAnims(int nActivity)
         case AL_ACT_NPC_SIT_DINNER:
             return "sitdrink, siteat, sitidle, sittalk, sittalk01, sittalk02";
         case AL_ACT_NPC_STAND_CHAT:
-            return "chuckle, lookleft, lookright, nodno, nodyes, shrug, talk01, talk02, talklaugh";
+            return "chuckle, lookleft, lookright, shrug, talk01, talk02, talklaugh";
         case AL_ACT_NPC_WWP: return "kneelidle, lookleft, lookright";
         case AL_ACT_NPC_CHEER: return "chuckle, clapping, talklaugh, victory";
         case AL_ACT_NPC_COOK_MULTI:

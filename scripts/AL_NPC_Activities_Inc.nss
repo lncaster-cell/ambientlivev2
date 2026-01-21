@@ -167,8 +167,13 @@ void AL_ApplyActivityForSlot(object oNpc, int nSlot)
         nActivity = AL_ACT_NPC_ACT_ONE;
     }
 
-    string sCustom = AL_GetActivityCustomAnims(nActivity);
-    string sNumeric = AL_GetActivityNumericAnims(nActivity);
+    int bLocateWrapper = AL_IsLocateWrapperActivity(nActivity);
+    string sCustom = bLocateWrapper
+        ? AL_GetLocateWrapperCustomAnims(nActivity)
+        : AL_GetActivityCustomAnims(nActivity);
+    string sNumeric = bLocateWrapper
+        ? AL_GetLocateWrapperNumericAnims(nActivity)
+        : AL_GetActivityNumericAnims(nActivity);
 
     if (sCustom != "")
     {

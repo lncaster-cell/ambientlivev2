@@ -6,8 +6,6 @@
 //   r_slot         (int)    active slot
 //   r_idx          (int)    active index (optional)
 
-const int AL_EVT_ROUTE_REPEAT = 3007;
-
 string AL_GetRoutePrefix(int nSlot)
 {
     return "r" + IntToString(nSlot) + "_";
@@ -21,11 +19,6 @@ int AL_GetRouteCount(object oNpc, int nSlot)
 location AL_GetRoutePoint(object oNpc, int nSlot, int iIndex)
 {
     return GetLocalLocation(oNpc, AL_GetRoutePrefix(nSlot) + IntToString(iIndex));
-}
-
-void AL_RequestRouteRepeat()
-{
-    SignalEvent(OBJECT_SELF, EventUserDefined(AL_EVT_ROUTE_REPEAT));
 }
 
 void AL_QueueRoute(object oNpc, int nSlot, int bClearActions)

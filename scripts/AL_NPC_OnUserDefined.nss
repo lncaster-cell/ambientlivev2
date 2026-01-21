@@ -40,12 +40,5 @@ void main()
     }
 
     SetLocalInt(oNpc, "l", nSlot);
-
-    if (nEvent == AL_EVT_ROUTE_REPEAT)
-    {
-        AL_QueueRoute(oNpc, nSlot, FALSE);
-        return;
-    }
-
     AL_QueueRoute(oNpc, nSlot, TRUE);
 }

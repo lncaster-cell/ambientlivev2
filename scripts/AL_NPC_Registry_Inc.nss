@@ -1,4 +1,5 @@
 // NPC registry helpers: dense array locals n, n0..n99 on areas.
+// Registry synchronization runs only at the area level (see AreaTick).
 
 #include "AL_Constants_Inc"
 
@@ -23,8 +24,6 @@ int AL_PruneRegistrySlot(object oArea, int iIndex, int iCount)
     return iCount;
 }
 
-const float AL_NPC_AREA_CHECK_PERIOD = 6.0;
-
 void AL_RegisterNPC(object oNpc)
 {
     object oArea = GetArea(oNpc);
@@ -33,6 +32,8 @@ void AL_RegisterNPC(object oNpc)
     {
         return;
     }
+
+    SetLocalObject(oNpc, "al_last_area", oArea);
 
     int iCount = GetLocalInt(oArea, "n");
     int iIndex = 0;
@@ -95,31 +96,41 @@ void AL_UnregisterNPC(object oNpc)
     }
 }
 
-void AL_CheckNPCRegistryArea(object oNpc)
+void AL_SyncAreaNPCRegistry(object oArea)
 {
-    if (!GetIsObjectValid(oNpc))
-    {
-        return;
-    }
+    int iCount = GetLocalInt(oArea, "n");
+    int i = 0;
 
-    object oCurrentArea = GetArea(oNpc);
-    object oLastArea = GetLocalObject(oNpc, "al_last_area");
-
-    if (GetIsObjectValid(oCurrentArea))
+    while (i < iCount)
     {
-        if (!GetIsObjectValid(oLastArea))
+        string sKey = "n" + IntToString(i);
+        object oNpc = GetLocalObject(oArea, sKey);
+
+        if (!GetIsObjectValid(oNpc))
         {
-            SetLocalObject(oNpc, "al_last_area", oCurrentArea);
+            iCount = AL_PruneRegistrySlot(oArea, i, iCount);
+            continue;
         }
-        else if (oCurrentArea != oLastArea)
+
+        object oCurrentArea = GetArea(oNpc);
+        if (!GetIsObjectValid(oCurrentArea))
         {
-            AL_UnregisterNPC(oNpc);
+            DeleteLocalObject(oNpc, "al_last_area");
+            iCount = AL_PruneRegistrySlot(oArea, i, iCount);
+            continue;
+        }
+
+        if (oCurrentArea != oArea)
+        {
+            iCount = AL_PruneRegistrySlot(oArea, i, iCount);
             SetLocalObject(oNpc, "al_last_area", oCurrentArea);
             AL_RegisterNPC(oNpc);
+            continue;
         }
-    }
 
-    DelayCommand(AL_NPC_AREA_CHECK_PERIOD, AL_CheckNPCRegistryArea(oNpc));
+        SetLocalObject(oNpc, "al_last_area", oArea);
+        i++;
+    }
 }
 
 void AL_StartNPCRegistryTracking(object oNpc)
@@ -134,8 +145,6 @@ void AL_StartNPCRegistryTracking(object oNpc)
     {
         SetLocalObject(oNpc, "al_last_area", oArea);
     }
-
-    AL_CheckNPCRegistryArea(oNpc);
 }
 
 void AL_HideRegisteredNPCs(object oArea)

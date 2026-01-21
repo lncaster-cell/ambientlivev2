@@ -42,7 +42,6 @@ void AL_InitTrainingPartner(object oNpc)
 
     object oArea = GetArea(oNpc);
     object oPartner = OBJECT_INVALID;
-    int bResetCache = FALSE;
 
     if (GetIsObjectValid(oArea))
     {
@@ -130,8 +129,24 @@ void AL_InitBarPair(object oNpc)
     {
         // Area locals seeded via toolset/bootstrap:
         // "al_bar_bartender_ref" / "al_bar_barmaid_ref" point to the pair.
+        object oCachedSelf = GetLocalObject(oArea, sAreaSelfKey);
+        object oCachedPartner = GetLocalObject(oArea, sAreaPartnerKey);
+        if (!GetIsObjectValid(oCachedSelf)
+            || !GetIsObjectValid(oCachedPartner)
+            || GetArea(oCachedSelf) != oArea
+            || GetArea(oCachedPartner) != oArea)
+        {
+            DeleteLocalObject(oArea, sAreaSelfKey);
+            DeleteLocalObject(oArea, sAreaPartnerKey);
+        }
+
         SetLocalObject(oArea, sAreaSelfKey, oNpc);
         oPartner = GetLocalObject(oArea, sAreaPartnerKey);
+        if (GetIsObjectValid(oPartner) && GetArea(oPartner) != oArea)
+        {
+            DeleteLocalObject(oArea, sAreaPartnerKey);
+            oPartner = OBJECT_INVALID;
+        }
     }
 
     if (!GetIsObjectValid(oPartner))
@@ -154,10 +169,7 @@ void AL_InitBarPair(object oNpc)
     if (GetIsObjectValid(oPartner) && oPartner != oNpc)
     {
         SetLocalObject(oNpc, "al_bar_pair", oPartner);
-        if (!GetIsObjectValid(GetLocalObject(oPartner, "al_bar_pair")))
-        {
-            SetLocalObject(oPartner, "al_bar_pair", oNpc);
-        }
+        SetLocalObject(oPartner, "al_bar_pair", oNpc);
     }
 }
 

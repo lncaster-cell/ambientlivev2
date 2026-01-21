@@ -104,6 +104,11 @@ void AL_HideRegisteredNPCs(object oArea)
             continue;
         }
 
+        if (AL_CLEAR_ACTIONS_ON_DEACTIVATE)
+        {
+            AssignCommand(oNpc, ClearAllActions());
+        }
+
         SetScriptHidden(oNpc, TRUE, TRUE);
         i++;
     }
@@ -125,7 +130,7 @@ void AL_UnhideAndResyncRegisteredNPCs(object oArea)
             continue;
         }
 
-        SetScriptHidden(oNpc, FALSE);
+        SetScriptHidden(oNpc, FALSE, FALSE);
         SignalEvent(oNpc, EventUserDefined(AL_EVT_RESYNC));
         i++;
     }

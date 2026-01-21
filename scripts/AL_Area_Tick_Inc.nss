@@ -5,6 +5,21 @@
 
 const float AL_TICK_PERIOD = 45.0;
 
+int AL_ComputeTimeSlot()
+{
+    int iSlot = GetTimeHour() / 4;
+    if (iSlot < 0)
+    {
+        iSlot = 0;
+    }
+    else if (iSlot > AL_SLOT_MAX)
+    {
+        iSlot = AL_SLOT_MAX;
+    }
+
+    return iSlot;
+}
+
 void AreaTick(object oArea, int nToken)
 {
     if (GetLocalInt(oArea, "p") <= 0)
@@ -17,15 +32,7 @@ void AreaTick(object oArea, int nToken)
         return;
     }
 
-    int iSlot = GetTimeHour() / 4;
-    if (iSlot < 0)
-    {
-        iSlot = 0;
-    }
-    else if (iSlot > AL_SLOT_MAX)
-    {
-        iSlot = AL_SLOT_MAX;
-    }
+    int iSlot = AL_ComputeTimeSlot();
 
     if (iSlot == GetLocalInt(oArea, "s"))
     {

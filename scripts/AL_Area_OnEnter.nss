@@ -53,6 +53,7 @@ void main()
         {
             int iToken = GetLocalInt(oArea, "t") + 1;
             SetLocalInt(oArea, "t", iToken);
+            SetLocalInt(oArea, "ts", iToken);
             ExecuteScript("AL_Area_Tick", oArea);
         }
 

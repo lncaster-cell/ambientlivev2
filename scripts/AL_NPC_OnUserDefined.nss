@@ -105,7 +105,6 @@ void main()
             AL_UnregisterNPC(OBJECT_SELF);
             break;
         case AL_EVENT_RESET:
-            SetLocalInt(OBJECT_SELF, "l", -1);
             break;
         case AL_EVENT_DEBUG:
             break;

@@ -21,6 +21,7 @@ void AL_InitTrainingPartner(object oNpc)
     string sAreaPartnerKey = "";
     string sAreaSelfKey = "";
     string sAreaPartnerRefKey = "";
+    int bResetCache = FALSE;
 
     if (sTag == "FACTION_NPC1")
     {

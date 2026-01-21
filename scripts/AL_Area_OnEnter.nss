@@ -1,14 +1,9 @@
 // Area OnEnter: attach to the Area OnEnter event in the toolset.
 
-const int AL_EVENT_AREA_ENTER = 3000;
-const int AL_EVENT_AREA_EXIT = 3001;
-const int AL_EVENT_TICK = 3002;
-const int AL_EVENT_REGISTER = 3003;
-const int AL_EVENT_UNREGISTER = 3004;
-const int AL_EVENT_RESET = 3005;
-const int AL_EVENT_DEBUG = 3006;
+const int AL_EVT_RESYNC = 3006;
+const float AL_TICK_PERIOD = 45.0;
 
-void AL_SignalRegisteredNPCs(object oArea, int nEvent)
+void AL_ResyncRegisteredNPCs(object oArea)
 {
     int iCount = GetLocalInt(oArea, "n");
     int i = 0;
@@ -34,7 +29,8 @@ void AL_SignalRegisteredNPCs(object oArea, int nEvent)
             continue;
         }
 
-        SignalEvent(oNpc, EventUserDefined(nEvent));
+        SetScriptHidden(oNpc, FALSE);
+        SignalEvent(oNpc, EventUserDefined(AL_EVT_RESYNC));
         i++;
     }
 }
@@ -44,19 +40,39 @@ void main()
     object oArea = OBJECT_SELF;
     object oEntering = GetEnteringObject();
 
-    if (GetIsPC(oEntering))
+    if (!GetIsObjectValid(oEntering))
     {
-        int iPlayers = GetLocalInt(oArea, "p") + 1;
-        SetLocalInt(oArea, "p", iPlayers);
-
-        if (iPlayers == 1)
-        {
-            int iToken = GetLocalInt(oArea, "t") + 1;
-            SetLocalInt(oArea, "t", iToken);
-            SetLocalInt(oArea, "ts", iToken);
-            ExecuteScript("AL_Area_Tick", oArea);
-        }
-
-        AL_SignalRegisteredNPCs(oArea, AL_EVENT_AREA_ENTER);
+        return;
     }
+
+    if (!GetIsPC(oEntering))
+    {
+        return;
+    }
+
+    int iPlayers = GetLocalInt(oArea, "p") + 1;
+    SetLocalInt(oArea, "p", iPlayers);
+
+    if (iPlayers != 1)
+    {
+        return;
+    }
+
+    int iToken = GetLocalInt(oArea, "t") + 1;
+    SetLocalInt(oArea, "t", iToken);
+
+    int iSlot = GetTimeHour() / 4;
+    if (iSlot < 0)
+    {
+        iSlot = 0;
+    }
+    else if (iSlot > 5)
+    {
+        iSlot = 5;
+    }
+
+    SetLocalInt(oArea, "s", iSlot);
+
+    AL_ResyncRegisteredNPCs(oArea);
+    DelayCommand(AL_TICK_PERIOD, ExecuteScript("AL_Area_Tick", oArea));
 }

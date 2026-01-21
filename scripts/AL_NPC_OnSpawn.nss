@@ -32,5 +32,14 @@ void AL_RegisterNPC(object oNpc)
 
 void main()
 {
-    AL_RegisterNPC(OBJECT_SELF);
+    object oNpc = OBJECT_SELF;
+    SetLocalInt(oNpc, "l", -1);
+
+    AL_RegisterNPC(oNpc);
+
+    object oArea = GetArea(oNpc);
+    if (GetIsObjectValid(oArea) && GetLocalInt(oArea, "p") <= 0)
+    {
+        SetScriptHidden(oNpc, TRUE, TRUE);
+    }
 }

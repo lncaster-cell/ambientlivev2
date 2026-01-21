@@ -38,6 +38,11 @@ void main()
 
     if (nEvent == AL_EVT_ROUTE_REPEAT)
     {
+        if (AL_GetRouteCount(oNpc, nSlot) <= 0)
+        {
+            return;
+        }
+
         if (GetLocalInt(oNpc, "l") != nSlot)
         {
             return;

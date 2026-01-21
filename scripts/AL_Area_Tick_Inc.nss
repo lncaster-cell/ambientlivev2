@@ -5,6 +5,7 @@
 // NPC registry synchronization is handled here at the area level only.
 
 const float AL_TICK_PERIOD = 45.0;
+const int AL_SYNC_TICK_INTERVAL = 4;
 
 int AL_IsRelevantRouteTag(string sTag)
 {
@@ -120,6 +121,16 @@ void AreaTick(object oArea, int nToken)
         return;
     }
 
+    int iSyncTick = GetLocalInt(oArea, "al_sync_tick") + 1;
+    int bSynced = FALSE;
+    if (iSyncTick >= AL_SYNC_TICK_INTERVAL)
+    {
+        iSyncTick = 0;
+        AL_SyncAreaNPCRegistry(oArea);
+        bSynced = TRUE;
+    }
+    SetLocalInt(oArea, "al_sync_tick", iSyncTick);
+
     int iSlot = AL_ComputeTimeSlot();
 
     if (iSlot == GetLocalInt(oArea, "s"))
@@ -128,7 +139,10 @@ void AreaTick(object oArea, int nToken)
         return;
     }
 
-    AL_SyncAreaNPCRegistry(oArea);
+    if (!bSynced)
+    {
+        AL_SyncAreaNPCRegistry(oArea);
+    }
     SetLocalInt(oArea, "s", iSlot);
     AL_BroadcastUserEvent(oArea, AL_EVT_SLOT_BASE + iSlot);
     DelayCommand(AL_TICK_PERIOD, AreaTick(oArea, nToken));

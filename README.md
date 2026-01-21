@@ -8,6 +8,20 @@
 * NPC OnDeath (unregister): `AL_NPC_OnDeath`
 * NPC OnUserDefined: `AL_NPC_OnUserDefined`
 
+## Role activity defaults
+
+You can assign a role to an NPC by setting the local int `al_role` in the toolset.
+On spawn the system will map that role to a default activity and fill slots `a0..a5` with
+the matching activity ID. This happens once per NPC and marks `al_role_applied` so custom
+slot values can still be set manually afterwards.
+
+Available roles are declared in `AL_Role_Activities_Inc`:
+
+* `AL_ROLE_BARTENDER`, `AL_ROLE_BARMAID`, `AL_ROLE_LIGHT_KEEPER`
+* `AL_ROLE_SMITH`, `AL_ROLE_COOK`, `AL_ROLE_MUSICIAN`
+* `AL_ROLE_TRAINER`, `AL_ROLE_THIEF`, `AL_ROLE_MERCHANT`
+* `AL_ROLE_GUARD`, `AL_ROLE_CITIZEN`
+
 ### Example
 
 Attach the scripts in the toolset event slots:

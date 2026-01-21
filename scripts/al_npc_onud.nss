@@ -15,7 +15,7 @@ int AL_GetAmbientLifeDaySeconds()
 
 int AL_GetRepeatAnimIntervalSeconds()
 {
-    return 5 + Random(8);
+    return 15 + Random(16);
 }
 
 int AL_IsRepeatAnimCoolingDown(object oNpc)
@@ -127,7 +127,13 @@ void main()
         }
     }
 
-    if (bAllowAnimation)
+    int bShouldPlay = bAllowAnimation;
+    if (bRequiresRoute && nEvent != AL_EVT_ROUTE_REPEAT)
+    {
+        bShouldPlay = FALSE;
+    }
+
+    if (bShouldPlay)
     {
         int nIntervalSeconds = AL_GetRepeatAnimIntervalSeconds();
         AL_ApplyActivityForSlot(oNpc, nSlot);

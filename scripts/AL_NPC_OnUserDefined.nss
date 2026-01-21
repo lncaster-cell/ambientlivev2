@@ -66,6 +66,9 @@ void main()
         AL_ClearActiveRoute(oNpc, /*bClearActions=*/ TRUE);
         return;
     }
+
+    AL_RefreshRouteForSlot(oNpc, nSlot);
+
     int bRequiresRoute = AL_ActivityHasRequiredRoute(oNpc, nSlot, nActivity);
     if (bRequiresRoute && AL_GetRouteCount(oNpc, nSlot) <= 0)
     {

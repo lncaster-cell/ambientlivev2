@@ -23,6 +23,13 @@ Available roles are declared in `AL_Role_Activities_Inc`:
 * `AL_ROLE_TRAINER`, `AL_ROLE_THIEF`, `AL_ROLE_MERCHANT`
 * `AL_ROLE_GUARD`, `AL_ROLE_CITIZEN`
 
+## Dynamic slot updates
+
+If you change an NPC activity slot (`a0..a5`) at runtime, call
+`AL_RefreshRouteForSlot(oNpc, nSlot)` afterwards to cache the waypoint route
+for that slot when the activity requires it. This keeps route changes in sync
+without needing to respawn the NPC.
+
 ### Example
 
 Attach the scripts in the toolset event slots:

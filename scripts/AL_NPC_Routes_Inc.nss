@@ -6,6 +6,8 @@
 //   r_slot         (int)    active slot
 //   r_idx          (int)    active index (optional)
 
+#include "AL_Constants_Inc"
+
 string AL_GetRoutePrefix(int nSlot)
 {
     return "r" + IntToString(nSlot) + "_";

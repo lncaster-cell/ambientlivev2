@@ -32,17 +32,7 @@ void main()
     int iToken = GetLocalInt(oArea, "t") + 1;
     SetLocalInt(oArea, "t", iToken);
 
-    int iSlot = GetTimeHour() / 4;
-    if (iSlot < 0)
-    {
-        iSlot = 0;
-    }
-    else if (iSlot > AL_SLOT_MAX)
-    {
-        iSlot = AL_SLOT_MAX;
-    }
-
-    SetLocalInt(oArea, "s", iSlot);
+    SetLocalInt(oArea, "s", AL_ComputeTimeSlot());
 
     AL_UnhideAndResyncRegisteredNPCs(oArea);
     DelayCommand(AL_TICK_PERIOD, AreaTick(oArea, iToken));

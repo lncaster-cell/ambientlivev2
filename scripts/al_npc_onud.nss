@@ -4,6 +4,54 @@
 #include "al_npc_acts_inc"
 #include "al_npc_routes"
 
+int AL_GetAmbientLifeTimestamp()
+{
+    int nSeconds = GetTimeSecond();
+    int nMinutes = GetTimeMinute();
+    int nHours = GetTimeHour();
+    int nDays = GetCalendarDay();
+    int nMonths = GetCalendarMonth();
+    int nYears = GetCalendarYear();
+
+    return nSeconds
+        + (nMinutes * 60)
+        + (nHours * 3600)
+        + (nDays * 86400)
+        + (nMonths * 2678400)
+        + (nYears * 32140800);
+}
+
+int AL_GetRepeatAnimCooldownSeconds(int nRouteCount)
+{
+    if (nRouteCount <= 1)
+    {
+        return 6;
+    }
+    if (nRouteCount == 2)
+    {
+        return 4;
+    }
+
+    return 3;
+}
+
+int AL_IsRepeatAnimCoolingDown(object oNpc, int nCooldownSeconds)
+{
+    int nLast = GetLocalInt(oNpc, "al_last_anim_time");
+    if (nLast <= 0)
+    {
+        return FALSE;
+    }
+
+    int nNow = AL_GetAmbientLifeTimestamp();
+    return (nNow - nLast) < nCooldownSeconds;
+}
+
+void AL_MarkAnimationApplied(object oNpc)
+{
+    SetLocalInt(oNpc, "al_last_anim_time", AL_GetAmbientLifeTimestamp());
+}
+
 void main()
 {
     object oNpc = OBJECT_SELF;
@@ -83,5 +131,20 @@ void main()
     {
         AL_QueueRoute(oNpc, nSlot, nEvent != AL_EVT_ROUTE_REPEAT);
     }
-    AL_ApplyActivityForSlot(oNpc, nSlot);
+
+    int bAllowAnimation = TRUE;
+    if (nEvent == AL_EVT_ROUTE_REPEAT)
+    {
+        int nCooldownSeconds = AL_GetRepeatAnimCooldownSeconds(AL_GetRouteCount(oNpc, nSlot));
+        if (AL_IsRepeatAnimCoolingDown(oNpc, nCooldownSeconds))
+        {
+            bAllowAnimation = FALSE;
+        }
+    }
+
+    if (bAllowAnimation)
+    {
+        AL_ApplyActivityForSlot(oNpc, nSlot);
+        AL_MarkAnimationApplied(oNpc);
+    }
 }

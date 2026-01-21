@@ -1,5 +1,10 @@
 # ambientlivev2
 
+## Документация
+
+* [AUDIT.md](AUDIT.md) — аудит текущих механизмов, противоречий и рисков.
+* [INSTALLATION.md](INSTALLATION.md) — инструкция установки для начинающих.
+
 ## Toolset bindings
 
 * Area OnEnter: `AL_Area_OnEnter`

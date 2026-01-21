@@ -11,7 +11,13 @@ string AL_GetActivitySlotKey(int nSlot)
 
 int AL_GetActivityForSlot(object oNpc, int nSlot)
 {
-    return GetLocalInt(oNpc, AL_GetActivitySlotKey(nSlot));
+    int nActivity = GetLocalInt(oNpc, AL_GetActivitySlotKey(nSlot));
+    if (nActivity > 0 || nSlot == 0)
+    {
+        return nActivity;
+    }
+
+    return GetLocalInt(oNpc, AL_GetActivitySlotKey(0));
 }
 
 string AL_TrimToken(string sToken)

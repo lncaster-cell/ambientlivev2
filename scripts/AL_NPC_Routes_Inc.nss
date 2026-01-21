@@ -6,8 +6,6 @@
 //   r_slot         (int)    active slot
 //   r_idx          (int)    active index (optional)
 
-#include "AL_Constants_Inc"
-
 string AL_GetRoutePrefix(int nSlot)
 {
     return "r" + IntToString(nSlot) + "_";
@@ -23,11 +21,6 @@ location AL_GetRoutePoint(object oNpc, int nSlot, int iIndex)
     return GetLocalLocation(oNpc, AL_GetRoutePrefix(nSlot) + IntToString(iIndex));
 }
 
-void AL_RequestRouteRepeat()
-{
-    SignalEvent(OBJECT_SELF, EventUserDefined(AL_EVT_ROUTE_REPEAT));
-}
-
 void AL_QueueRoute(object oNpc, int nSlot, int bClearActions)
 {
     int iCount = AL_GetRouteCount(oNpc, nSlot);
@@ -40,7 +33,7 @@ void AL_QueueRoute(object oNpc, int nSlot, int bClearActions)
 
     if (bClearActions)
     {
-        AssignCommand(oNpc, ClearAllActions());
+        ClearAllActions();
     }
 
     SetLocalInt(oNpc, "r_slot", nSlot);
@@ -49,9 +42,7 @@ void AL_QueueRoute(object oNpc, int nSlot, int bClearActions)
     while (i < iCount)
     {
         location lPoint = AL_GetRoutePoint(oNpc, nSlot, i);
-        AssignCommand(oNpc, ActionMoveToLocation(lPoint));
+        ActionMoveToLocation(lPoint);
         i++;
     }
-
-    AssignCommand(oNpc, ActionDoCommand(AL_RequestRouteRepeat()));
 }

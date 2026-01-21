@@ -1,7 +1,7 @@
 // NPC registry helpers: dense array locals n, n0..n99 on areas.
 // Registry synchronization runs only at the area level (see AreaTick).
 
-#include "AL_Constants_Inc"
+#include "al_constants_inc"
 
 int AL_PruneRegistrySlot(object oArea, int iIndex, int iCount)
 {

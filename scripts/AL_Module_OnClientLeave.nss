@@ -1,6 +1,6 @@
 // Module OnClientLeave: attach to the Module OnClientLeave event in the toolset.
 
-#include "AL_NPC_Registry_Inc"
+#include "al_npc_registry_inc"
 
 void main()
 {

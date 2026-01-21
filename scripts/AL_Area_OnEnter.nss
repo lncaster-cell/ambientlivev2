@@ -65,6 +65,7 @@ void main()
 
     AL_CacheAreaRoutes(oArea);
     AL_CacheTrainingPartners(oArea);
+    AL_SyncAreaNPCRegistry(oArea);
     AL_UnhideAndResyncRegisteredNPCs(oArea);
     DelayCommand(AL_TICK_PERIOD, AreaTick(oArea, iToken));
 }

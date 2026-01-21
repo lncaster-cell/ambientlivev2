@@ -32,7 +32,8 @@ Available roles are declared in `AL_Role_Activities_Inc`:
 
 If you change an NPC activity slot (`a0..a5`) at runtime, call
 `AL_RefreshRouteForSlot(oNpc, nSlot)` afterwards to cache the waypoint route
-for that slot when the activity requires it. This keeps route changes in sync
+for that slot. Slot routes (`AL_WP_S0..AL_WP_S5`) apply to any activity and take
+priority over activity-specific routes. This keeps route changes in sync
 without needing to respawn the NPC.
 
 ### Example

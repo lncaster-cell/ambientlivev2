@@ -6,6 +6,84 @@
 
 const float AL_TICK_PERIOD = 45.0;
 
+int AL_IsRelevantRouteTag(string sTag)
+{
+    if (sTag == "AL_WP_PACE")
+    {
+        return TRUE;
+    }
+
+    if (sTag == "AL_WP_WWP")
+    {
+        return TRUE;
+    }
+
+    if (sTag == "AL_WP_S0" || sTag == "AL_WP_S1" || sTag == "AL_WP_S2")
+    {
+        return TRUE;
+    }
+
+    if (sTag == "AL_WP_S3" || sTag == "AL_WP_S4" || sTag == "AL_WP_S5")
+    {
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+void AL_CacheAreaRoutes(object oArea)
+{
+    if (!GetIsObjectValid(oArea))
+    {
+        return;
+    }
+
+    if (GetLocalInt(oArea, "al_routes_cached"))
+    {
+        return;
+    }
+
+    object oObj = GetFirstObjectInArea(oArea);
+
+    while (GetIsObjectValid(oObj))
+    {
+        if (GetObjectType(oObj) == OBJECT_TYPE_WAYPOINT)
+        {
+            string sTag = GetTag(oObj);
+            if (AL_IsRelevantRouteTag(sTag))
+            {
+                string sAreaPrefix = "al_route_" + sTag + "_";
+                int iCount = GetLocalInt(oArea, sAreaPrefix + "n");
+                string sIndex = sAreaPrefix + IntToString(iCount);
+                SetLocalLocation(oArea, sIndex, GetLocation(oObj));
+
+                DeleteLocalLocation(oArea, sIndex + "_jump");
+                string sAreaTag = GetLocalString(oObj, "al_transition_area");
+                if (sAreaTag != "")
+                {
+                    object oTargetArea = GetObjectByTag(sAreaTag);
+                    if (GetIsObjectValid(oTargetArea))
+                    {
+                        float fX = GetLocalFloat(oObj, "al_transition_x");
+                        float fY = GetLocalFloat(oObj, "al_transition_y");
+                        float fZ = GetLocalFloat(oObj, "al_transition_z");
+                        float fFacing = GetLocalFloat(oObj, "al_transition_facing");
+                        location lJump = Location(oTargetArea, Vector(fX, fY, fZ), fFacing);
+                        SetLocalLocation(oArea, sIndex + "_jump", lJump);
+                    }
+                }
+
+                iCount++;
+                SetLocalInt(oArea, sAreaPrefix + "n", iCount);
+            }
+        }
+
+        oObj = GetNextObjectInArea(oArea);
+    }
+
+    SetLocalInt(oArea, "al_routes_cached", TRUE);
+}
+
 int AL_ComputeTimeSlot()
 {
     int iSlot = GetTimeHour() / 4;

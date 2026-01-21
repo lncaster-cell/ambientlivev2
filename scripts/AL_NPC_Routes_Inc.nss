@@ -70,35 +70,25 @@ int AL_CacheRouteFromTag(object oNpc, int nSlot, string sTag)
     }
 
     string sPrefix = AL_GetRoutePrefix(nSlot);
-    int iCount = 0;
-    object oObj = GetFirstObjectInArea(oArea);
+    string sAreaPrefix = "al_route_" + sTag + "_";
+    int iCount = GetLocalInt(oArea, sAreaPrefix + "n");
+    int i = 0;
 
-    while (GetIsObjectValid(oObj))
+    while (i < iCount)
     {
-        if (GetObjectType(oObj) == OBJECT_TYPE_WAYPOINT && GetTag(oObj) == sTag)
+        string sIndex = sPrefix + IntToString(i);
+        string sAreaIndex = sAreaPrefix + IntToString(i);
+        SetLocalLocation(oNpc, sIndex, GetLocalLocation(oArea, sAreaIndex));
+
+        DeleteLocalLocation(oNpc, sIndex + "_jump");
+        location lJump = GetLocalLocation(oArea, sAreaIndex + "_jump");
+        object oJumpArea = GetAreaFromLocation(lJump);
+        if (GetIsObjectValid(oJumpArea))
         {
-            string sIndex = sPrefix + IntToString(iCount);
-            SetLocalLocation(oNpc, sIndex, GetLocation(oObj));
-
-            DeleteLocalLocation(oNpc, sIndex + "_jump");
-
-            string sAreaTag = GetLocalString(oObj, "al_transition_area");
-            if (sAreaTag != "")
-            {
-                object oTargetArea = GetObjectByTag(sAreaTag);
-                if (GetIsObjectValid(oTargetArea))
-                {
-                    float fX = GetLocalFloat(oObj, "al_transition_x");
-                    float fY = GetLocalFloat(oObj, "al_transition_y");
-                    float fZ = GetLocalFloat(oObj, "al_transition_z");
-                    float fFacing = GetLocalFloat(oObj, "al_transition_facing");
-                    location lJump = Location(oTargetArea, Vector(fX, fY, fZ), fFacing);
-                    SetLocalLocation(oNpc, sIndex + "_jump", lJump);
-                }
-            }
-            iCount++;
+            SetLocalLocation(oNpc, sIndex + "_jump", lJump);
         }
-        oObj = GetNextObjectInArea(oArea);
+
+        i++;
     }
 
     if (iCount > 0)

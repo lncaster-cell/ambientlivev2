@@ -42,9 +42,22 @@ void AL_InitTrainingPartner(object oNpc)
 
     object oArea = GetArea(oNpc);
     object oPartner = OBJECT_INVALID;
+    int bResetCache = FALSE;
 
     if (GetIsObjectValid(oArea))
     {
+        if (GetLocalInt(oArea, "al_training_partner_cached"))
+        {
+            object oCachedSelf = GetLocalObject(oArea, sAreaSelfKey);
+            object oCachedPartner = GetLocalObject(oArea, sAreaPartnerKey);
+            if (!GetIsObjectValid(oCachedSelf) || !GetIsObjectValid(oCachedPartner))
+            {
+                SetLocalInt(oArea, "al_training_partner_cached", FALSE);
+                DeleteLocalObject(oArea, sAreaSelfKey);
+                DeleteLocalObject(oArea, sAreaPartnerKey);
+                bResetCache = TRUE;
+            }
+        }
         SetLocalObject(oArea, sAreaSelfKey, oNpc);
         oPartner = GetLocalObject(oArea, sAreaPartnerKey);
     }
@@ -59,6 +72,11 @@ void AL_InitTrainingPartner(object oNpc)
                 SetLocalObject(oArea, sAreaPartnerKey, oPartner);
             }
         }
+    }
+
+    if (GetIsObjectValid(oArea) && bResetCache)
+    {
+        SetLocalInt(oArea, "al_training_partner_cached", TRUE);
     }
 
     if (GetIsObjectValid(oPartner) && oPartner != oNpc)

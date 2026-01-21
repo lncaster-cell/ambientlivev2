@@ -17,11 +17,14 @@ void AL_RegisterNPC(object oNpc)
         return;
     }
 
-    int iIndex = GetLocalInt(oNpc, "l");
-
-    if (GetLocalObject(oArea, "n" + IntToString(iIndex)) == oNpc)
+    int iIndex = 0;
+    while (iIndex < 100)
     {
-        return;
+        if (GetLocalObject(oArea, "n" + IntToString(iIndex)) == oNpc)
+        {
+            return;
+        }
+        iIndex++;
     }
 
     int iCount = GetLocalInt(oArea, "n");
@@ -32,7 +35,6 @@ void AL_RegisterNPC(object oNpc)
     }
 
     SetLocalObject(oArea, "n" + IntToString(iCount), oNpc);
-    SetLocalInt(oNpc, "l", iCount);
     SetLocalInt(oArea, "n", iCount + 1);
 }
 
@@ -49,18 +51,28 @@ void AL_UnregisterNPC(object oNpc)
 
     if (iCount <= 0)
     {
-        DeleteLocalInt(oNpc, "l");
         return;
     }
 
-    int iIndex = GetLocalInt(oNpc, "l");
-    string sKey = "n" + IntToString(iIndex);
-
-    if (GetLocalObject(oArea, sKey) != oNpc)
+    int iIndex = 0;
+    int bFound = FALSE;
+    while (iIndex < iCount)
     {
-        DeleteLocalInt(oNpc, "l");
+        string sKey = "n" + IntToString(iIndex);
+        if (GetLocalObject(oArea, sKey) == oNpc)
+        {
+            bFound = TRUE;
+            break;
+        }
+        iIndex++;
+    }
+
+    if (!bFound)
+    {
         return;
     }
+
+    string sKey = "n" + IntToString(iIndex);
 
     int iLastIndex = iCount - 1;
 
@@ -68,16 +80,10 @@ void AL_UnregisterNPC(object oNpc)
     {
         object oSwap = GetLocalObject(oArea, "n" + IntToString(iLastIndex));
         SetLocalObject(oArea, sKey, oSwap);
-
-        if (GetIsObjectValid(oSwap))
-        {
-            SetLocalInt(oSwap, "l", iIndex);
-        }
     }
 
     DeleteLocalObject(oArea, "n" + IntToString(iLastIndex));
     SetLocalInt(oArea, "n", iLastIndex);
-    DeleteLocalInt(oNpc, "l");
 }
 
 void main()
@@ -99,7 +105,7 @@ void main()
             AL_UnregisterNPC(OBJECT_SELF);
             break;
         case AL_EVENT_RESET:
-            DeleteLocalInt(OBJECT_SELF, "l");
+            SetLocalInt(OBJECT_SELF, "l", -1);
             break;
         case AL_EVENT_DEBUG:
             break;

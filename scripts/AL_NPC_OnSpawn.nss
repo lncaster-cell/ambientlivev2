@@ -67,11 +67,79 @@ void AL_InitTrainingPartner(object oNpc)
     }
 }
 
+void AL_InitBarPair(object oNpc)
+{
+    if (!GetIsObjectValid(oNpc))
+    {
+        return;
+    }
+
+    if (GetIsObjectValid(GetLocalObject(oNpc, "al_bar_pair")))
+    {
+        return;
+    }
+
+    int nRole = GetLocalInt(oNpc, AL_ROLE_LOCAL);
+    string sPartnerTag = "";
+    string sAreaPartnerKey = "";
+    string sAreaSelfKey = "";
+
+    if (nRole == AL_ROLE_BARTENDER)
+    {
+        sPartnerTag = "BARMAID";
+        sAreaSelfKey = "al_bar_bartender";
+        sAreaPartnerKey = "al_bar_barmaid";
+    }
+    else if (nRole == AL_ROLE_BARMAID)
+    {
+        sPartnerTag = "BARTENDER";
+        sAreaSelfKey = "al_bar_barmaid";
+        sAreaPartnerKey = "al_bar_bartender";
+    }
+
+    if (sPartnerTag == "")
+    {
+        return;
+    }
+
+    object oArea = GetArea(oNpc);
+    object oPartner = OBJECT_INVALID;
+
+    if (GetIsObjectValid(oArea))
+    {
+        SetLocalObject(oArea, sAreaSelfKey, oNpc);
+        oPartner = GetLocalObject(oArea, sAreaPartnerKey);
+    }
+
+    if (!GetIsObjectValid(oPartner))
+    {
+        oPartner = GetObjectByTag(sPartnerTag);
+        if (GetIsObjectValid(oArea) && GetIsObjectValid(oPartner) && GetArea(oPartner) == oArea)
+        {
+            SetLocalObject(oArea, sAreaPartnerKey, oPartner);
+        }
+        else
+        {
+            oPartner = OBJECT_INVALID;
+        }
+    }
+
+    if (GetIsObjectValid(oPartner) && oPartner != oNpc)
+    {
+        SetLocalObject(oNpc, "al_bar_pair", oPartner);
+        if (!GetIsObjectValid(GetLocalObject(oPartner, "al_bar_pair")))
+        {
+            SetLocalObject(oPartner, "al_bar_pair", oNpc);
+        }
+    }
+}
+
 void main()
 {
     object oNpc = OBJECT_SELF;
     SetLocalInt(oNpc, "l", -1);
     AL_InitTrainingPartner(oNpc);
+    AL_InitBarPair(oNpc);
     AL_ApplyRoleActivities(oNpc);
     int iSlot = 0;
 

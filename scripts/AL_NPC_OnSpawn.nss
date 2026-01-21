@@ -5,10 +5,73 @@
 #include "AL_NPC_Registry_Inc"
 #include "AL_Role_Activities_Inc"
 
+void AL_InitTrainingPartner(object oNpc)
+{
+    if (!GetIsObjectValid(oNpc))
+    {
+        return;
+    }
+
+    if (GetIsObjectValid(GetLocalObject(oNpc, "al_training_partner")))
+    {
+        return;
+    }
+
+    string sTag = GetTag(oNpc);
+    string sPartnerTag = "";
+    string sAreaPartnerKey = "";
+    string sAreaSelfKey = "";
+
+    if (sTag == "FACTION_NPC1")
+    {
+        sPartnerTag = "FACTION_NPC2";
+        sAreaSelfKey = "al_training_npc1";
+        sAreaPartnerKey = "al_training_npc2";
+    }
+    else if (sTag == "FACTION_NPC2")
+    {
+        sPartnerTag = "FACTION_NPC1";
+        sAreaSelfKey = "al_training_npc2";
+        sAreaPartnerKey = "al_training_npc1";
+    }
+
+    if (sPartnerTag == "")
+    {
+        return;
+    }
+
+    object oArea = GetArea(oNpc);
+    object oPartner = OBJECT_INVALID;
+
+    if (GetIsObjectValid(oArea))
+    {
+        SetLocalObject(oArea, sAreaSelfKey, oNpc);
+        oPartner = GetLocalObject(oArea, sAreaPartnerKey);
+    }
+
+    if (!GetIsObjectValid(oPartner))
+    {
+        if (!GetIsObjectValid(oArea) || !GetLocalInt(oArea, "al_training_partner_cached"))
+        {
+            oPartner = GetObjectByTag(sPartnerTag);
+            if (GetIsObjectValid(oArea) && GetIsObjectValid(oPartner) && GetArea(oPartner) == oArea)
+            {
+                SetLocalObject(oArea, sAreaPartnerKey, oPartner);
+            }
+        }
+    }
+
+    if (GetIsObjectValid(oPartner) && oPartner != oNpc)
+    {
+        SetLocalObject(oNpc, "al_training_partner", oPartner);
+    }
+}
+
 void main()
 {
     object oNpc = OBJECT_SELF;
     SetLocalInt(oNpc, "l", -1);
+    AL_InitTrainingPartner(oNpc);
     AL_ApplyRoleActivities(oNpc);
     int iSlot = 0;
 

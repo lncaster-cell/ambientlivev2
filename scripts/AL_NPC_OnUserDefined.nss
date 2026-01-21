@@ -43,7 +43,7 @@ void main()
             return;
         }
     }
-    else if (GetLocalInt(oNpc, "l") == nSlot)
+    else if (nEvent != AL_EVT_RESYNC && GetLocalInt(oNpc, "l") == nSlot)
     {
         return;
     }

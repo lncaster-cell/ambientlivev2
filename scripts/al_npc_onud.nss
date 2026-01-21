@@ -15,7 +15,7 @@ void main()
         object oArea = GetArea(oNpc);
         if (GetIsObjectValid(oArea))
         {
-            nSlot = GetLocalInt(oArea, "s");
+            nSlot = GetLocalInt(oArea, "al_slot");
         }
     }
     else if (nEvent >= AL_EVT_SLOT_0 && nEvent <= AL_EVT_SLOT_5)
@@ -24,7 +24,7 @@ void main()
     }
     else if (nEvent == AL_EVT_ROUTE_REPEAT)
     {
-        nSlot = GetLocalInt(oNpc, "r_slot");
+        nSlot = GetLocalInt(oNpc, "al_r_slot");
     }
     else
     {
@@ -38,28 +38,28 @@ void main()
 
     if (nEvent == AL_EVT_ROUTE_REPEAT)
     {
-        int nRouteActive = GetLocalInt(oNpc, "r_active");
+        int nRouteActive = GetLocalInt(oNpc, "al_r_active");
         if (nRouteActive == FALSE || AL_GetRouteCount(oNpc, nSlot) <= 0)
         {
             return;
         }
 
-        if (GetLocalInt(oNpc, "l") != nSlot)
+        if (GetLocalInt(oNpc, "al_last_slot") != nSlot)
         {
             return;
         }
     }
-    else if (nEvent != AL_EVT_RESYNC && GetLocalInt(oNpc, "l") == nSlot)
+    else if (nEvent != AL_EVT_RESYNC && GetLocalInt(oNpc, "al_last_slot") == nSlot)
     {
         return;
     }
 
     if (nEvent == AL_EVT_RESYNC)
     {
-        SetLocalInt(oNpc, "l", -1);
+        SetLocalInt(oNpc, "al_last_slot", -1);
     }
 
-    SetLocalInt(oNpc, "l", nSlot);
+    SetLocalInt(oNpc, "al_last_slot", nSlot);
     int nActivity = AL_GetActivityForSlot(oNpc, nSlot);
     if (nActivity == AL_ACT_NPC_HIDDEN)
     {

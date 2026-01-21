@@ -164,7 +164,7 @@ void AL_InitBarPair(object oNpc)
 void main()
 {
     object oNpc = OBJECT_SELF;
-    SetLocalInt(oNpc, "l", -1);
+    SetLocalInt(oNpc, "al_last_slot", -1);
     AL_InitTrainingPartner(oNpc);
     AL_InitBarPair(oNpc);
     AL_ApplyRoleActivities(oNpc);
@@ -175,7 +175,7 @@ void main()
     object oArea = GetArea(oNpc);
     if (GetIsObjectValid(oArea))
     {
-        int iSlotCount = GetLocalInt(oArea, "p");
+        int iSlotCount = GetLocalInt(oArea, "al_player_count");
         if (iSlotCount > 0)
         {
             if (GetScriptHidden(oNpc))

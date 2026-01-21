@@ -17,6 +17,8 @@ void main()
         return;
     }
 
+    SetLocalInt(oExiting, "al_exit_counted", 1);
+
     int iPlayers = GetLocalInt(oArea, "p") - 1;
     if (iPlayers < 0)
     {

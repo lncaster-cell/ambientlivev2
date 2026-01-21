@@ -46,5 +46,5 @@ void AL_QueueRoute(object oNpc, int nSlot, int bClearActions)
         i++;
     }
 
-    ActionDoCommand(AL_RequestRouteRepeat());
+    ActionDoCommand(SignalEvent(oNpc, EventUserDefined(AL_EVT_ROUTE_REPEAT)));
 }

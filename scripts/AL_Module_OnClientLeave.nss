@@ -1,35 +1,6 @@
 // Module OnClientLeave: attach to the Module OnClientLeave event in the toolset.
 
-void AL_HideRegisteredNPCs(object oArea)
-{
-    int iCount = GetLocalInt(oArea, "n");
-    int i = 0;
-
-    while (i < iCount)
-    {
-        string sKey = "n" + IntToString(i);
-        object oNpc = GetLocalObject(oArea, sKey);
-
-        if (!GetIsObjectValid(oNpc))
-        {
-            int iLastIndex = iCount - 1;
-
-            if (i != iLastIndex)
-            {
-                object oSwap = GetLocalObject(oArea, "n" + IntToString(iLastIndex));
-                SetLocalObject(oArea, sKey, oSwap);
-            }
-
-            DeleteLocalObject(oArea, "n" + IntToString(iLastIndex));
-            iCount--;
-            SetLocalInt(oArea, "n", iCount);
-            continue;
-        }
-
-        SetScriptHidden(oNpc, TRUE, TRUE);
-        i++;
-    }
-}
+#include "AL_NPC_Registry_Inc"
 
 void main()
 {
@@ -45,12 +16,19 @@ void main()
         return;
     }
 
+    if (GetLocalInt(oLeaving, "al_exit_counted") == 1)
+    {
+        return;
+    }
+
     object oArea = GetArea(oLeaving);
 
     if (!GetIsObjectValid(oArea))
     {
         return;
     }
+
+    SetLocalInt(oLeaving, "al_exit_counted", 1);
 
     int iPlayers = GetLocalInt(oArea, "p") - 1;
     if (iPlayers < 0)

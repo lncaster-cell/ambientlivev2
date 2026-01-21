@@ -56,6 +56,35 @@ void AL_DebugLog(object oNpc, string sMessage)
     }
 }
 
+void AL_HandleResyncSlotOverrides(object oNpc)
+{
+    string sA0 = GetLocalString(oNpc, "a0");
+    string sA1 = GetLocalString(oNpc, "a1");
+    string sA2 = GetLocalString(oNpc, "a2");
+    string sA3 = GetLocalString(oNpc, "a3");
+    string sA4 = GetLocalString(oNpc, "a4");
+    string sA5 = GetLocalString(oNpc, "a5");
+    int bHasSlotOverride = sA0 != ""
+        || sA1 != ""
+        || sA2 != ""
+        || sA3 != ""
+        || sA4 != ""
+        || sA5 != "";
+
+    if (bHasSlotOverride)
+    {
+        SetLocalInt(oNpc, "al_role_applied", FALSE);
+    }
+
+    AL_DebugLog(oNpc, "resync slots a0=" + sA0
+        + " a1=" + sA1
+        + " a2=" + sA2
+        + " a3=" + sA3
+        + " a4=" + sA4
+        + " a5=" + sA5
+        + " override=" + IntToString(bHasSlotOverride));
+}
+
 void main()
 {
     object oNpc = OBJECT_SELF;
@@ -69,6 +98,8 @@ void main()
         {
             nSlot = GetLocalInt(oArea, "al_slot");
         }
+
+        AL_HandleResyncSlotOverrides(oNpc);
     }
     else if (nEvent >= AL_EVT_SLOT_0 && nEvent <= AL_EVT_SLOT_5)
     {

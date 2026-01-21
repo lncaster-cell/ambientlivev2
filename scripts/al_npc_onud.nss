@@ -4,52 +4,38 @@
 #include "al_npc_acts_inc"
 #include "al_npc_routes"
 
-int AL_GetAmbientLifeTimestamp()
+int AL_GetAmbientLifeDaySeconds()
 {
     int nSeconds = GetTimeSecond();
     int nMinutes = GetTimeMinute();
     int nHours = GetTimeHour();
-    int nDays = GetCalendarDay();
-    int nMonths = GetCalendarMonth();
-    int nYears = GetCalendarYear();
 
-    return nSeconds
-        + (nMinutes * 60)
-        + (nHours * 3600)
-        + (nDays * 86400)
-        + (nMonths * 2678400)
-        + (nYears * 32140800);
+    return nSeconds + (nMinutes * 60) + (nHours * 3600);
 }
 
-int AL_GetRepeatAnimCooldownSeconds(int nRouteCount)
+int AL_GetRepeatAnimIntervalSeconds()
 {
-    if (nRouteCount <= 1)
-    {
-        return 6;
-    }
-    if (nRouteCount == 2)
-    {
-        return 4;
-    }
-
-    return 3;
+    return 5 + Random(8);
 }
 
-int AL_IsRepeatAnimCoolingDown(object oNpc, int nCooldownSeconds)
+int AL_IsRepeatAnimCoolingDown(object oNpc)
 {
-    int nLast = GetLocalInt(oNpc, "al_last_anim_time");
-    if (nLast <= 0)
+    int nNext = GetLocalInt(oNpc, "al_anim_next");
+    if (nNext <= 0)
     {
         return FALSE;
     }
 
-    int nNow = AL_GetAmbientLifeTimestamp();
-    return (nNow - nLast) < nCooldownSeconds;
+    int nNow = AL_GetAmbientLifeDaySeconds();
+    int nDelta = (nNext - nNow + 86400) % 86400;
+    return nDelta > 0 && nDelta < 43200;
 }
 
-void AL_MarkAnimationApplied(object oNpc)
+void AL_MarkAnimationApplied(object oNpc, int nIntervalSeconds)
 {
-    SetLocalInt(oNpc, "al_last_anim_time", AL_GetAmbientLifeTimestamp());
+    int nNow = AL_GetAmbientLifeDaySeconds();
+    int nNext = (nNow + nIntervalSeconds) % 86400;
+    SetLocalInt(oNpc, "al_anim_next", nNext);
 }
 
 void main()
@@ -135,8 +121,7 @@ void main()
     int bAllowAnimation = TRUE;
     if (nEvent == AL_EVT_ROUTE_REPEAT)
     {
-        int nCooldownSeconds = AL_GetRepeatAnimCooldownSeconds(AL_GetRouteCount(oNpc, nSlot));
-        if (AL_IsRepeatAnimCoolingDown(oNpc, nCooldownSeconds))
+        if (AL_IsRepeatAnimCoolingDown(oNpc))
         {
             bAllowAnimation = FALSE;
         }
@@ -144,7 +129,8 @@ void main()
 
     if (bAllowAnimation)
     {
+        int nIntervalSeconds = AL_GetRepeatAnimIntervalSeconds();
         AL_ApplyActivityForSlot(oNpc, nSlot);
-        AL_MarkAnimationApplied(oNpc);
+        AL_MarkAnimationApplied(oNpc, nIntervalSeconds);
     }
 }

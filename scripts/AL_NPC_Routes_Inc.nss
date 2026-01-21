@@ -6,7 +6,9 @@
 //   r_slot         (int)    active slot
 //   r_idx          (int)    active index (optional)
 
+#include "AL_Activities_Inc"
 #include "AL_Constants_Inc"
+#include "AL_NPC_Registry_Inc"
 
 string AL_GetRoutePrefix(int nSlot)
 {
@@ -31,7 +33,9 @@ void AL_ClearRoute(object oNpc, int nSlot)
 
     while (i < iCount)
     {
-        DeleteLocalLocation(oNpc, sPrefix + IntToString(i));
+        string sIndex = sPrefix + IntToString(i);
+        DeleteLocalLocation(oNpc, sIndex);
+        DeleteLocalLocation(oNpc, sIndex + "_jump");
         i++;
     }
 
@@ -61,7 +65,25 @@ int AL_CacheRouteFromTag(object oNpc, int nSlot, string sTag)
     {
         if (GetObjectType(oObj) == OBJECT_TYPE_WAYPOINT && GetTag(oObj) == sTag)
         {
-            SetLocalLocation(oNpc, sPrefix + IntToString(iCount), GetLocation(oObj));
+            string sIndex = sPrefix + IntToString(iCount);
+            SetLocalLocation(oNpc, sIndex, GetLocation(oObj));
+
+            DeleteLocalLocation(oNpc, sIndex + "_jump");
+
+            string sAreaTag = GetLocalString(oObj, "al_transition_area");
+            if (sAreaTag != "")
+            {
+                object oTargetArea = GetObjectByTag(sAreaTag);
+                if (GetIsObjectValid(oTargetArea))
+                {
+                    float fX = GetLocalFloat(oObj, "al_transition_x");
+                    float fY = GetLocalFloat(oObj, "al_transition_y");
+                    float fZ = GetLocalFloat(oObj, "al_transition_z");
+                    float fFacing = GetLocalFloat(oObj, "al_transition_facing");
+                    location lJump = Location(oTargetArea, Vector(fX, fY, fZ), fFacing);
+                    SetLocalLocation(oNpc, sIndex + "_jump", lJump);
+                }
+            }
             iCount++;
         }
         oObj = GetNextObjectInArea(oArea);
@@ -75,10 +97,57 @@ int AL_CacheRouteFromTag(object oNpc, int nSlot, string sTag)
     return iCount;
 }
 
+void AL_CacheRoutesForAllSlots(object oNpc)
+{
+    int iSlot = 0;
+
+    while (iSlot <= AL_SLOT_MAX)
+    {
+        string sSlotTag = "AL_WP_S" + IntToString(iSlot);
+        int iCount = AL_CacheRouteFromTag(oNpc, iSlot, sSlotTag);
+
+        if (iCount <= 0)
+        {
+            int nActivity = GetLocalInt(oNpc, "a" + IntToString(iSlot));
+            string sWaypointTag = AL_GetActivityWaypointTag(nActivity);
+
+            if (sWaypointTag != "")
+            {
+                AL_CacheRouteFromTag(oNpc, iSlot, sWaypointTag);
+            }
+        }
+
+        iSlot++;
+    }
+}
+
+void AL_HandleRouteAreaTransition()
+{
+    object oNpc = OBJECT_SELF;
+
+    if (!GetIsObjectValid(oNpc))
+    {
+        return;
+    }
+
+    AL_UnregisterNPC(oNpc);
+
+    object oArea = GetArea(oNpc);
+    if (GetIsObjectValid(oArea))
+    {
+        SetLocalObject(oNpc, "al_last_area", oArea);
+        AL_RegisterNPC(oNpc);
+    }
+
+    AL_CacheRoutesForAllSlots(oNpc);
+    SignalEvent(oNpc, EventUserDefined(AL_EVT_RESYNC));
+}
+
 void AL_QueueRoute(object oNpc, int nSlot, int bClearActions)
 {
     int iCount = AL_GetRouteCount(oNpc, nSlot);
     int i = 0;
+    int bTransitionQueued = FALSE;
 
     if (bClearActions)
     {
@@ -99,11 +168,24 @@ void AL_QueueRoute(object oNpc, int nSlot, int bClearActions)
 
     while (i < iCount)
     {
+        string sIndex = AL_GetRoutePrefix(nSlot) + IntToString(i);
         location lPoint = AL_GetRoutePoint(oNpc, nSlot, i);
         AssignCommand(oNpc, ActionMoveToLocation(lPoint));
+        location lJump = GetLocalLocation(oNpc, sIndex + "_jump");
+        object oJumpArea = GetAreaFromLocation(lJump);
+        if (GetIsObjectValid(oJumpArea))
+        {
+            AssignCommand(oNpc, ActionJumpToLocation(lJump));
+            AssignCommand(oNpc, ActionDoCommand(AL_HandleRouteAreaTransition()));
+            bTransitionQueued = TRUE;
+            break;
+        }
         i++;
     }
 
-    AssignCommand(oNpc, ActionWait(1.0));
-    AssignCommand(oNpc, ActionDoCommand(SignalEvent(oNpc, EventUserDefined(AL_EVT_ROUTE_REPEAT))));
+    if (!bTransitionQueued)
+    {
+        AssignCommand(oNpc, ActionWait(1.0));
+        AssignCommand(oNpc, ActionDoCommand(SignalEvent(oNpc, EventUserDefined(AL_EVT_ROUTE_REPEAT))));
+    }
 }

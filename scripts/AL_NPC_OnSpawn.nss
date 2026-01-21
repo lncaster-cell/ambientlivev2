@@ -159,26 +159,7 @@ void main()
     AL_InitTrainingPartner(oNpc);
     AL_InitBarPair(oNpc);
     AL_ApplyRoleActivities(oNpc);
-    int iSlot = 0;
-
-    while (iSlot <= AL_SLOT_MAX)
-    {
-        string sSlotTag = "AL_WP_S" + IntToString(iSlot);
-        int iCount = AL_CacheRouteFromTag(oNpc, iSlot, sSlotTag);
-
-        if (iCount <= 0)
-        {
-            int nActivity = AL_GetActivityForSlot(oNpc, iSlot);
-            string sWaypointTag = AL_GetActivityWaypointTag(nActivity);
-
-            if (sWaypointTag != "")
-            {
-                AL_CacheRouteFromTag(oNpc, iSlot, sWaypointTag);
-            }
-        }
-
-        iSlot++;
-    }
+    AL_CacheRoutesForAllSlots(oNpc);
 
     AL_RegisterNPC(oNpc);
     AL_StartNPCRegistryTracking(oNpc);

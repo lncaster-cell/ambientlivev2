@@ -1,37 +1,9 @@
+#include "AL_Constants_Inc"
+#include "AL_NPC_Registry_Inc"
+
 // Shared Area tick helper: scheduled every 45s while players are present.
 
 const float AL_TICK_PERIOD = 45.0;
-
-void AL_BroadcastSlot(object oArea, int nSlot)
-{
-    int iCount = GetLocalInt(oArea, "n");
-    int i = 0;
-
-    while (i < iCount)
-    {
-        string sKey = "n" + IntToString(i);
-        object oNpc = GetLocalObject(oArea, sKey);
-
-        if (!GetIsObjectValid(oNpc))
-        {
-            int iLastIndex = iCount - 1;
-
-            if (i != iLastIndex)
-            {
-                object oSwap = GetLocalObject(oArea, "n" + IntToString(iLastIndex));
-                SetLocalObject(oArea, sKey, oSwap);
-            }
-
-            DeleteLocalObject(oArea, "n" + IntToString(iLastIndex));
-            iCount--;
-            SetLocalInt(oArea, "n", iCount);
-            continue;
-        }
-
-        SignalEvent(oNpc, EventUserDefined(3000 + nSlot));
-        i++;
-    }
-}
 
 void AreaTick(object oArea, int nToken)
 {
@@ -50,9 +22,9 @@ void AreaTick(object oArea, int nToken)
     {
         iSlot = 0;
     }
-    else if (iSlot > 5)
+    else if (iSlot > AL_SLOT_MAX)
     {
-        iSlot = 5;
+        iSlot = AL_SLOT_MAX;
     }
 
     if (iSlot == GetLocalInt(oArea, "s"))
@@ -62,6 +34,6 @@ void AreaTick(object oArea, int nToken)
     }
 
     SetLocalInt(oArea, "s", iSlot);
-    AL_BroadcastSlot(oArea, iSlot);
+    AL_BroadcastUserEvent(oArea, AL_EVT_SLOT_BASE + iSlot);
     DelayCommand(AL_TICK_PERIOD, AreaTick(oArea, nToken));
 }

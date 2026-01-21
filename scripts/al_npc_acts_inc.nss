@@ -42,6 +42,26 @@ int AL_GetActivityForSlot(object oNpc, int nSlot)
     return AL_GetActivitySlotInt(oNpc, 0);
 }
 
+int AL_GetWaypointActivityForSlot(object oNpc, int nSlot)
+{
+    if (AL_GetRouteCount(oNpc, nSlot) <= 0)
+    {
+        return 0;
+    }
+
+    int nIndex = GetLocalInt(oNpc, "r_idx");
+    if (nIndex < 0)
+    {
+        nIndex = 0;
+    }
+    else if (nIndex >= AL_GetRouteCount(oNpc, nSlot))
+    {
+        nIndex = 0;
+    }
+
+    return AL_GetRoutePointActivity(oNpc, nSlot, nIndex);
+}
+
 string AL_TrimToken(string sToken)
 {
     int iLen = GetStringLength(sToken);

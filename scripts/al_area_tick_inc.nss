@@ -57,6 +57,15 @@ void AL_CacheAreaRoutes(object oArea)
                 int iCount = GetLocalInt(oArea, sAreaPrefix + "n");
                 string sIndex = sAreaPrefix + IntToString(iCount);
                 SetLocalLocation(oArea, sIndex, GetLocation(oObj));
+                int nActivity = GetLocalInt(oObj, "al_activity");
+                if (nActivity > 0)
+                {
+                    SetLocalInt(oArea, sIndex + "_activity", nActivity);
+                }
+                else
+                {
+                    DeleteLocalInt(oArea, sIndex + "_activity");
+                }
 
                 DeleteLocalLocation(oArea, sIndex + "_jump");
                 // Transition setup is pre-seeded via toolset/bootstrap:

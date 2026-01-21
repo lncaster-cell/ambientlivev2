@@ -15,7 +15,7 @@ int AL_GetAmbientLifeDaySeconds()
 
 int AL_GetRepeatAnimIntervalSeconds()
 {
-    return 5 + Random(8);
+    return 15 + Random(16);
 }
 
 int AL_IsRepeatAnimCoolingDown(object oNpc)
@@ -36,6 +36,24 @@ void AL_MarkAnimationApplied(object oNpc, int nIntervalSeconds)
     int nNow = AL_GetAmbientLifeDaySeconds();
     int nNext = (nNow + nIntervalSeconds) % 86400;
     SetLocalInt(oNpc, "al_anim_next", nNext);
+}
+
+void AL_DebugLog(object oNpc, string sMessage)
+{
+    if (GetLocalInt(oNpc, "al_debug") != 1)
+    {
+        object oArea = GetArea(oNpc);
+        if (!GetIsObjectValid(oArea) || GetLocalInt(oArea, "al_debug") != 1)
+        {
+            return;
+        }
+    }
+
+    object oPc = GetFirstPC();
+    if (GetIsObjectValid(oPc))
+    {
+        SendMessageToPC(oPc, sMessage);
+    }
 }
 
 void main()
@@ -95,6 +113,9 @@ void main()
 
     SetLocalInt(oNpc, "al_last_slot", nSlot);
     int nActivity = AL_GetActivityForSlot(oNpc, nSlot);
+    AL_DebugLog(oNpc, "AL_EVT " + IntToString(nEvent)
+        + " slot=" + IntToString(nSlot)
+        + " activity=" + IntToString(nActivity));
     if (nActivity == AL_ACT_NPC_HIDDEN)
     {
         AL_ClearActiveRoute(oNpc, /*bClearActions=*/ TRUE);
@@ -104,18 +125,42 @@ void main()
     AL_RefreshRouteForSlot(oNpc, nSlot);
 
     int bRequiresRoute = AL_ActivityHasRequiredRoute(oNpc, nSlot, nActivity);
+    int bSleepActivity = AL_ShouldLoopCustomAnimation(nActivity);
     if (bRequiresRoute && AL_GetRouteCount(oNpc, nSlot) <= 0)
     {
         bRequiresRoute = FALSE;
     }
+    AL_DebugLog(oNpc, "routeCount=" + IntToString(AL_GetRouteCount(oNpc, nSlot))
+        + " requiresRoute=" + IntToString(bRequiresRoute)
+        + " sleep=" + IntToString(bSleepActivity));
     if (!bRequiresRoute && nEvent != AL_EVT_ROUTE_REPEAT)
     {
         AL_ClearActiveRoute(oNpc, /*bClearActions=*/ TRUE);
     }
 
+    int bSkipMoveRepeat = FALSE;
+    if (bRequiresRoute && nEvent == AL_EVT_ROUTE_REPEAT && AL_GetRouteCount(oNpc, nSlot) == 1)
+    {
+        bSkipMoveRepeat = TRUE;
+    }
+
     if (bRequiresRoute)
     {
-        AL_QueueRoute(oNpc, nSlot, nEvent != AL_EVT_ROUTE_REPEAT);
+        if (bSleepActivity && nEvent == AL_EVT_ROUTE_REPEAT)
+        {
+            AL_ClearActiveRoute(oNpc, /*bClearActions=*/ FALSE);
+        }
+        else if (bSkipMoveRepeat)
+        {
+            float fRepeatDelay = 5.0 + IntToFloat(Random(8));
+
+            AssignCommand(oNpc, ActionWait(fRepeatDelay));
+            AssignCommand(oNpc, ActionDoCommand(SignalEvent(oNpc, EventUserDefined(AL_EVT_ROUTE_REPEAT))));
+        }
+        else
+        {
+            AL_QueueRoute(oNpc, nSlot, nEvent != AL_EVT_ROUTE_REPEAT);
+        }
     }
 
     int bAllowAnimation = TRUE;
@@ -127,7 +172,13 @@ void main()
         }
     }
 
-    if (bAllowAnimation)
+    int bShouldPlay = bAllowAnimation;
+    if (bRequiresRoute && nEvent != AL_EVT_ROUTE_REPEAT)
+    {
+        bShouldPlay = FALSE;
+    }
+
+    if (bShouldPlay)
     {
         int nIntervalSeconds = AL_GetRepeatAnimIntervalSeconds();
         AL_ApplyActivityForSlot(oNpc, nSlot);

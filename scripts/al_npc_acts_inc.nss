@@ -69,14 +69,27 @@ string AL_SelectRandomToken(string sList)
     return sSelected;
 }
 
-void AL_PlayCustomAnimation(object oNpc, string sAnimation)
+int AL_ShouldLoopCustomAnimation(int nActivity)
+{
+    if (nActivity == AL_ACT_NPC_MIDNIGHT_BED
+        || nActivity == AL_ACT_NPC_SLEEP_BED
+        || nActivity == AL_ACT_NPC_MIDNIGHT_90
+        || nActivity == AL_ACT_NPC_SLEEP_90)
+    {
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+void AL_PlayCustomAnimation(object oNpc, string sAnimation, int bLooping)
 {
     if (sAnimation == "")
     {
         return;
     }
 
-    PlayCustomAnimation(oNpc, sAnimation, TRUE, 1.0);
+    PlayCustomAnimation(oNpc, sAnimation, bLooping, 1.0);
 }
 
 void AL_PlayNumericAnimation(int nAnimation)
@@ -168,7 +181,8 @@ void AL_ApplyActivityForSlot(object oNpc, int nSlot)
     if (sCustom != "")
     {
         string sAnim = AL_SelectRandomToken(sCustom);
-        AL_PlayCustomAnimation(oNpc, sAnim);
+        int bLooping = AL_ShouldLoopCustomAnimation(nActivity);
+        AL_PlayCustomAnimation(oNpc, sAnim, bLooping);
         return;
     }
 

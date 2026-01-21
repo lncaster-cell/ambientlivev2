@@ -46,6 +46,7 @@ const int AL_ACT_NPC_KNEEL_TALK = 39;
 const int AL_ACT_NPC_LIGHT_KEEPER = 40;
 const int AL_ACT_NPC_BARMAID = 41;
 const int AL_ACT_NPC_BARTENDER = 42;
+const int AL_ACT_NPC_GUARD = 43;
 const int AL_ACT_LOCATE_WRAPPER_MIN = 91;
 const int AL_ACT_LOCATE_WRAPPER_MAX = 98;
 const int AL_ACT_RESERVED = 200;
@@ -125,6 +126,7 @@ string AL_GetActivityCustomAnims(int nActivity)
             return "bored, getground, gettable, openlock, sleightofhand, yawn";
         case AL_ACT_NPC_KNEEL_TALK: return "kneelidle, kneeltalk";
         case AL_ACT_NPC_BARTENDER: return "gettable, lookright, openlock, yawn";
+        case AL_ACT_NPC_GUARD: return "bored, lookleft, lookright, sigh";
     }
 
     return "";

@@ -54,6 +54,33 @@ const int AL_ACT_RESERVED = 200;
 const string AL_HELPER_ANIM_SITUP = "situp";
 const string AL_HELPER_ANIM_IDLE = "idle";
 
+int AL_IsLocateWrapperActivity(int nActivity)
+{
+    return nActivity >= AL_ACT_LOCATE_WRAPPER_MIN && nActivity <= AL_ACT_LOCATE_WRAPPER_MAX;
+}
+
+string AL_GetLocateWrapperCustomAnims(int nActivity)
+{
+    switch (nActivity)
+    {
+        case 91: return "lookleft, lookright, shrug";
+        case 92: return "bored, scratchhead, yawn";
+        case 93: return "sitfidget, sitidle, sittalk, sittalk01, sittalk02";
+        case 94: return "kneelidle, kneeltalk";
+        case 95: return "chuckle, nodno, nodyes, talk01, talk02, talklaugh";
+        case 96: return "craft01, dustoff, forge01, openlock";
+        case 97: return "meditate";
+        case 98: return "disableground, sleightofhand, sneak";
+    }
+
+    return "";
+}
+
+string AL_GetLocateWrapperNumericAnims(int nActivity)
+{
+    return "";
+}
+
 string AL_GetActivityCustomAnims(int nActivity)
 {
     switch (nActivity)

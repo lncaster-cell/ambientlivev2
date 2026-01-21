@@ -35,7 +35,7 @@ void AL_QueueRoute(object oNpc, int nSlot, int bClearActions)
 
     if (bClearActions)
     {
-        ClearAllActions();
+        AssignCommand(oNpc, ClearAllActions());
     }
 
     SetLocalInt(oNpc, "r_slot", nSlot);
@@ -44,9 +44,9 @@ void AL_QueueRoute(object oNpc, int nSlot, int bClearActions)
     while (i < iCount)
     {
         location lPoint = AL_GetRoutePoint(oNpc, nSlot, i);
-        ActionMoveToLocation(lPoint);
+        AssignCommand(oNpc, ActionMoveToLocation(lPoint));
         i++;
     }
 
-    ActionDoCommand(SignalEvent(oNpc, EventUserDefined(AL_EVT_ROUTE_REPEAT)));
+    AssignCommand(oNpc, ActionDoCommand(SignalEvent(oNpc, EventUserDefined(AL_EVT_ROUTE_REPEAT))));
 }

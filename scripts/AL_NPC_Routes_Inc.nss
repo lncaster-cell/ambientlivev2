@@ -102,5 +102,6 @@ void AL_QueueRoute(object oNpc, int nSlot, int bClearActions)
         i++;
     }
 
+    AssignCommand(oNpc, ActionWait(1.0));
     AssignCommand(oNpc, ActionDoCommand(SignalEvent(oNpc, EventUserDefined(AL_EVT_ROUTE_REPEAT))));
 }

@@ -199,19 +199,7 @@ void AL_QueueRoute(object oNpc, int nSlot, int bClearActions)
 
     if (!bTransitionQueued)
     {
-        float fRepeatDelay = 2.0;
-        if (iCount <= 1)
-        {
-            fRepeatDelay = 6.0;
-        }
-        else if (iCount == 2)
-        {
-            fRepeatDelay = 4.0;
-        }
-        else if (iCount == 3)
-        {
-            fRepeatDelay = 3.0;
-        }
+        float fRepeatDelay = 5.0 + IntToFloat(Random(8));
 
         AssignCommand(oNpc, ActionWait(fRepeatDelay));
         AssignCommand(oNpc, ActionDoCommand(SignalEvent(oNpc, EventUserDefined(AL_EVT_ROUTE_REPEAT))));

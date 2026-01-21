@@ -104,6 +104,7 @@ void main()
     AL_RefreshRouteForSlot(oNpc, nSlot);
 
     int bRequiresRoute = AL_ActivityHasRequiredRoute(oNpc, nSlot, nActivity);
+    int bSleepActivity = AL_ShouldLoopCustomAnimation(nActivity);
     if (bRequiresRoute && AL_GetRouteCount(oNpc, nSlot) <= 0)
     {
         bRequiresRoute = FALSE;
@@ -121,7 +122,11 @@ void main()
 
     if (bRequiresRoute)
     {
-        if (bSkipMoveRepeat)
+        if (bSleepActivity && nEvent == AL_EVT_ROUTE_REPEAT)
+        {
+            AL_ClearActiveRoute(oNpc, /*bClearActions=*/ FALSE);
+        }
+        else if (bSkipMoveRepeat)
         {
             float fRepeatDelay = 5.0 + IntToFloat(Random(8));
 

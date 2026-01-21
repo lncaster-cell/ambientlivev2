@@ -4,6 +4,33 @@
 #include "AL_Area_Tick_Inc"
 #include "AL_NPC_Registry_Inc"
 
+void AL_CacheTrainingPartners(object oArea)
+{
+    if (!GetIsObjectValid(oArea))
+    {
+        return;
+    }
+
+    if (GetLocalInt(oArea, "al_training_partner_cached"))
+    {
+        return;
+    }
+
+    object oNpc1 = GetObjectByTag("FACTION_NPC1");
+    if (GetIsObjectValid(oNpc1) && GetArea(oNpc1) == oArea)
+    {
+        SetLocalObject(oArea, "al_training_npc1", oNpc1);
+    }
+
+    object oNpc2 = GetObjectByTag("FACTION_NPC2");
+    if (GetIsObjectValid(oNpc2) && GetArea(oNpc2) == oArea)
+    {
+        SetLocalObject(oArea, "al_training_npc2", oNpc2);
+    }
+
+    SetLocalInt(oArea, "al_training_partner_cached", TRUE);
+}
+
 void main()
 {
     object oArea = OBJECT_SELF;
@@ -34,6 +61,7 @@ void main()
 
     SetLocalInt(oArea, "s", AL_ComputeTimeSlot());
 
+    AL_CacheTrainingPartners(oArea);
     AL_UnhideAndResyncRegisteredNPCs(oArea);
     DelayCommand(AL_TICK_PERIOD, AreaTick(oArea, iToken));
 }

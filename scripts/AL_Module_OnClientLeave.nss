@@ -16,12 +16,19 @@ void main()
         return;
     }
 
+    if (GetLocalInt(oLeaving, "al_exit_counted") == 1)
+    {
+        return;
+    }
+
     object oArea = GetArea(oLeaving);
 
     if (!GetIsObjectValid(oArea))
     {
         return;
     }
+
+    SetLocalInt(oLeaving, "al_exit_counted", 1);
 
     int iPlayers = GetLocalInt(oArea, "p") - 1;
     if (iPlayers < 0)

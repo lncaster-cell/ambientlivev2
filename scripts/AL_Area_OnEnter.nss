@@ -1,24 +1,14 @@
 // Area OnEnter: attach to the Area OnEnter event in the toolset.
 
-const int AL_EVENT_RESYNC = 3006;
+const int AL_EVENT_AREA_ENTER = 3000;
+const int AL_EVENT_AREA_EXIT = 3001;
+const int AL_EVENT_TICK = 3002;
+const int AL_EVENT_REGISTER = 3003;
+const int AL_EVENT_UNREGISTER = 3004;
+const int AL_EVENT_RESET = 3005;
+const int AL_EVENT_DEBUG = 3006;
 
-int AL_GetTimeSlot()
-{
-    int iSlot = GetTimeHour() / 4;
-
-    if (iSlot < 0)
-    {
-        iSlot = 0;
-    }
-    else if (iSlot > 5)
-    {
-        iSlot = 5;
-    }
-
-    return iSlot;
-}
-
-void AL_ResyncRegisteredNPCs(object oArea)
+void AL_SignalRegisteredNPCs(object oArea, int nEvent)
 {
     int iCount = GetLocalInt(oArea, "n");
     int i = 0;
@@ -49,8 +39,7 @@ void AL_ResyncRegisteredNPCs(object oArea)
             continue;
         }
 
-        SetScriptHidden(oNpc, FALSE);
-        SignalEvent(oNpc, EventUserDefined(AL_EVENT_RESYNC));
+        SignalEvent(oNpc, EventUserDefined(nEvent));
         i++;
     }
 }
@@ -60,32 +49,17 @@ void main()
     object oArea = OBJECT_SELF;
     object oEntering = GetEnteringObject();
 
-    if (!GetIsObjectValid(oEntering))
+    if (GetIsPC(oEntering))
     {
-        return;
+        int iPlayers = GetLocalInt(oArea, "p") + 1;
+        SetLocalInt(oArea, "p", iPlayers);
+
+        if (iPlayers == 1 && GetLocalInt(oArea, "t") == 0)
+        {
+            SetLocalInt(oArea, "t", 1);
+            DelayCommand(45.0, ExecuteScript("AL_Area_Tick", oArea));
+        }
+
+        AL_SignalRegisteredNPCs(oArea, AL_EVENT_AREA_ENTER);
     }
-
-    if (!GetIsPC(oEntering))
-    {
-        return;
-    }
-
-    int iPlayers = GetLocalInt(oArea, "p") + 1;
-    SetLocalInt(oArea, "p", iPlayers);
-
-    if (iPlayers != 1)
-    {
-        return;
-    }
-
-    int iToken = GetLocalInt(oArea, "t") + 1;
-    int iSlot = AL_GetTimeSlot();
-
-    SetLocalInt(oArea, "t", iToken);
-    SetLocalInt(oArea, "t0", iToken);
-    SetLocalInt(oArea, "s", iSlot);
-
-    AL_ResyncRegisteredNPCs(oArea);
-
-    DelayCommand(45.0, ExecuteScript("AL_Area_Tick", oArea));
 }

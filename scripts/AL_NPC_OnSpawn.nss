@@ -30,6 +30,5 @@ void AL_RegisterNPC(object oNpc)
 
 void main()
 {
-    SetLocalInt(OBJECT_SELF, "l", -1);
     AL_RegisterNPC(OBJECT_SELF);
 }

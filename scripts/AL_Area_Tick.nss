@@ -1,22 +1,14 @@
 // Shared Area tick helper: scheduled every 45s while players are present.
 
-int AL_GetTimeSlot()
-{
-    int iSlot = GetTimeHour() / 4;
+const int AL_EVENT_AREA_ENTER = 3000;
+const int AL_EVENT_AREA_EXIT = 3001;
+const int AL_EVENT_TICK = 3002;
+const int AL_EVENT_REGISTER = 3003;
+const int AL_EVENT_UNREGISTER = 3004;
+const int AL_EVENT_RESET = 3005;
+const int AL_EVENT_DEBUG = 3006;
 
-    if (iSlot < 0)
-    {
-        iSlot = 0;
-    }
-    else if (iSlot > 5)
-    {
-        iSlot = 5;
-    }
-
-    return iSlot;
-}
-
-void AL_BroadcastSlot(object oArea, int nEvent)
+void AL_SignalRegisteredNPCs(object oArea, int nEvent)
 {
     int iCount = GetLocalInt(oArea, "n");
     int i = 0;
@@ -55,27 +47,18 @@ void AL_BroadcastSlot(object oArea, int nEvent)
 void main()
 {
     object oArea = OBJECT_SELF;
-    int iToken = GetLocalInt(oArea, "t0");
 
     if (GetLocalInt(oArea, "p") <= 0)
     {
+        SetLocalInt(oArea, "t", 0);
         return;
     }
 
-    if (iToken != GetLocalInt(oArea, "t"))
-    {
-        return;
-    }
+    int iTickCount = GetLocalInt(oArea, "s") + 1;
+    SetLocalInt(oArea, "s", iTickCount);
 
-    int iSlot = AL_GetTimeSlot();
-    int iStoredSlot = GetLocalInt(oArea, "s");
+    AL_SignalRegisteredNPCs(oArea, AL_EVENT_TICK);
 
-    if (iSlot != iStoredSlot)
-    {
-        SetLocalInt(oArea, "s", iSlot);
-        AL_BroadcastSlot(oArea, 3000 + iSlot);
-    }
-
-    SetLocalInt(oArea, "t0", iToken);
+    SetLocalInt(oArea, "t", 1);
     DelayCommand(45.0, ExecuteScript("AL_Area_Tick", oArea));
 }

@@ -48,6 +48,11 @@ void main()
         return;
     }
 
+    if (nEvent == AL_EVT_RESYNC)
+    {
+        SetLocalInt(oNpc, "l", -1);
+    }
+
     SetLocalInt(oNpc, "l", nSlot);
     AL_QueueRoute(oNpc, nSlot, nEvent != AL_EVT_ROUTE_REPEAT);
     AL_ApplyActivityForSlot(oNpc, nSlot);

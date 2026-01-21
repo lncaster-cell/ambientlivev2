@@ -2,7 +2,7 @@
 
 #include "al_activities_inc"
 #include "al_constants_inc"
-#include "al_npc_routes_inc"
+#include "al_npc_routes"
 
 string AL_GetActivitySlotKey(int nSlot)
 {

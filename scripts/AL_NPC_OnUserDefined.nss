@@ -1,5 +1,7 @@
 // NPC OnUserDefined: attach to NPC OnUserDefined in the toolset.
 
+#include "AL_NPC_Routes_Inc"
+
 void main()
 {
     object oNpc = OBJECT_SELF;
@@ -18,6 +20,10 @@ void main()
     {
         nSlot = nEvent - 3000;
     }
+    else if (nEvent == AL_EVT_ROUTE_REPEAT)
+    {
+        nSlot = GetLocalInt(oNpc, "r_slot");
+    }
     else
     {
         return;
@@ -28,10 +34,18 @@ void main()
         return;
     }
 
-    if (GetLocalInt(oNpc, "l") == nSlot)
+    if (nEvent != AL_EVT_ROUTE_REPEAT && GetLocalInt(oNpc, "l") == nSlot)
     {
         return;
     }
 
     SetLocalInt(oNpc, "l", nSlot);
+
+    if (nEvent == AL_EVT_ROUTE_REPEAT)
+    {
+        AL_QueueRoute(oNpc, nSlot, FALSE);
+        return;
+    }
+
+    AL_QueueRoute(oNpc, nSlot, TRUE);
 }

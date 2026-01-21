@@ -95,18 +95,13 @@ void AL_PlayNumericAnimation(int nAnimation)
 // - Bar pair NPCs are set via local object "al_bar_pair" on the NPC.
 int AL_ActivityHasRequiredRoute(object oNpc, int nSlot, int nActivity)
 {
-    if (AL_GetRouteCount(oNpc, nSlot) > 0)
+    string sWaypointTag = AL_GetActivityWaypointTag(nActivity);
+    if (sWaypointTag == "")
     {
         return TRUE;
     }
 
-    string sWaypointTag = AL_GetActivityWaypointTag(nActivity);
-    if (sWaypointTag == "")
-    {
-        return FALSE;
-    }
-
-    return TRUE;
+    return AL_GetRouteCount(oNpc, nSlot) > 0;
 }
 
 void AL_RefreshRouteForSlot(object oNpc, int nSlot)
@@ -116,27 +111,16 @@ void AL_RefreshRouteForSlot(object oNpc, int nSlot)
         return;
     }
 
-    if (AL_GetRouteCount(oNpc, nSlot) <= 0)
-    {
-        string sSlotTag = "AL_WP_S" + IntToString(nSlot);
-        if (AL_CacheRouteFromTag(oNpc, nSlot, sSlotTag) > 0)
-        {
-            return;
-        }
-    }
-
     int nActivity = AL_GetActivityForSlot(oNpc, nSlot);
-    string sWaypointTag = AL_GetActivityWaypointTag(nActivity);
+    string sDesiredTag = AL_GetDesiredRouteTag(nSlot, nActivity);
 
-    if (sWaypointTag == "")
+    if (AL_GetRouteCount(oNpc, nSlot) > 0
+        && AL_GetRouteTag(oNpc, nSlot) == sDesiredTag)
     {
         return;
     }
 
-    if (AL_GetRouteCount(oNpc, nSlot) <= 0)
-    {
-        AL_CacheRouteFromTag(oNpc, nSlot, sWaypointTag);
-    }
+    AL_CacheRouteFromTag(oNpc, nSlot, sDesiredTag);
 }
 
 int AL_ActivityHasTrainingPartner(object oNpc)

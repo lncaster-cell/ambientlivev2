@@ -1,40 +1,8 @@
 // Area OnEnter: attach to the Area OnEnter event in the toolset.
 
-const int AL_EVT_RESYNC = 3006;
-
+#include "AL_Constants_Inc"
 #include "AL_Area_Tick_Inc"
-
-void AL_ResyncRegisteredNPCs(object oArea)
-{
-    int iCount = GetLocalInt(oArea, "n");
-    int i = 0;
-
-    while (i < iCount)
-    {
-        string sKey = "n" + IntToString(i);
-        object oNpc = GetLocalObject(oArea, sKey);
-
-        if (!GetIsObjectValid(oNpc))
-        {
-            int iLastIndex = iCount - 1;
-
-            if (i != iLastIndex)
-            {
-                object oSwap = GetLocalObject(oArea, "n" + IntToString(iLastIndex));
-                SetLocalObject(oArea, sKey, oSwap);
-            }
-
-            DeleteLocalObject(oArea, "n" + IntToString(iLastIndex));
-            iCount--;
-            SetLocalInt(oArea, "n", iCount);
-            continue;
-        }
-
-        SetScriptHidden(oNpc, FALSE);
-        SignalEvent(oNpc, EventUserDefined(AL_EVT_RESYNC));
-        i++;
-    }
-}
+#include "AL_NPC_Registry_Inc"
 
 void main()
 {
@@ -67,13 +35,13 @@ void main()
     {
         iSlot = 0;
     }
-    else if (iSlot > 5)
+    else if (iSlot > AL_SLOT_MAX)
     {
-        iSlot = 5;
+        iSlot = AL_SLOT_MAX;
     }
 
     SetLocalInt(oArea, "s", iSlot);
 
-    AL_ResyncRegisteredNPCs(oArea);
+    AL_UnhideAndResyncRegisteredNPCs(oArea);
     DelayCommand(AL_TICK_PERIOD, AreaTick(oArea, iToken));
 }

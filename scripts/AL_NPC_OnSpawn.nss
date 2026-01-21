@@ -1,34 +1,7 @@
 // NPC OnSpawn: attach to NPC OnSpawn in the toolset.
 
-void AL_RegisterNPC(object oNpc)
-{
-    object oArea = GetArea(oNpc);
-
-    if (!GetIsObjectValid(oArea))
-    {
-        return;
-    }
-
-    int iIndex = 0;
-    while (iIndex < 100)
-    {
-        if (GetLocalObject(oArea, "n" + IntToString(iIndex)) == oNpc)
-        {
-            return;
-        }
-        iIndex++;
-    }
-
-    int iCount = GetLocalInt(oArea, "n");
-
-    if (iCount >= 100)
-    {
-        return;
-    }
-
-    SetLocalObject(oArea, "n" + IntToString(iCount), oNpc);
-    SetLocalInt(oArea, "n", iCount + 1);
-}
+#include "AL_Constants_Inc"
+#include "AL_NPC_Registry_Inc"
 
 void main()
 {
@@ -47,7 +20,7 @@ void main()
             {
                 SetScriptHidden(oNpc, FALSE, TRUE);
             }
-            SignalEvent(oNpc, EventUserDefined(3006));
+            SignalEvent(oNpc, EventUserDefined(AL_EVT_RESYNC));
         }
         else
         {

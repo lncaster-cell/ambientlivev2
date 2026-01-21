@@ -1,12 +1,15 @@
 // NPC OnUserDefined: attach to NPC OnUserDefined in the toolset.
 
+#include "AL_Constants_Inc"
+#include "AL_NPC_Routes_Inc"
+
 void main()
 {
     object oNpc = OBJECT_SELF;
     int nEvent = GetUserDefinedEventNumber();
     int nSlot = -1;
 
-    if (nEvent == 3006)
+    if (nEvent == AL_EVT_RESYNC)
     {
         object oArea = GetArea(oNpc);
         if (GetIsObjectValid(oArea))
@@ -14,24 +17,36 @@ void main()
             nSlot = GetLocalInt(oArea, "s");
         }
     }
-    else if (nEvent >= 3000 && nEvent <= 3005)
+    else if (nEvent >= AL_EVT_SLOT_BASE && nEvent <= AL_EVT_SLOT_BASE + AL_SLOT_MAX)
     {
-        nSlot = nEvent - 3000;
+        nSlot = nEvent - AL_EVT_SLOT_BASE;
+    }
+    else if (nEvent == AL_EVT_ROUTE_REPEAT)
+    {
+        nSlot = GetLocalInt(oNpc, "r_slot");
     }
     else
     {
         return;
     }
 
-    if (nSlot < 0 || nSlot > 5)
+    if (nSlot < 0 || nSlot > AL_SLOT_MAX)
     {
         return;
     }
 
-    if (GetLocalInt(oNpc, "l") == nSlot)
+    if (nEvent != AL_EVT_ROUTE_REPEAT && GetLocalInt(oNpc, "l") == nSlot)
     {
         return;
     }
 
     SetLocalInt(oNpc, "l", nSlot);
+
+    if (nEvent == AL_EVT_ROUTE_REPEAT)
+    {
+        AL_QueueRoute(oNpc, nSlot, FALSE);
+        return;
+    }
+
+    AL_QueueRoute(oNpc, nSlot, TRUE);
 }

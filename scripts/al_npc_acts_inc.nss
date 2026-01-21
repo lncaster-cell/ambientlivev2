@@ -76,7 +76,7 @@ void AL_PlayCustomAnimation(object oNpc, string sAnimation)
         return;
     }
 
-    PlayCustomAnimation(oNpc, sAnimation, TRUE, 1.0);
+    PlayCustomAnimation(oNpc, sAnimation, FALSE, 1.0);
 }
 
 void AL_PlayNumericAnimation(int nAnimation)

@@ -1,6 +1,6 @@
 // Role activity helpers: map role IDs to default slot activities.
 
-#include "al_activities_inc"
+#include "al_acts_inc"
 #include "al_constants_inc"
 
 const string AL_ROLE_LOCAL = "al_role";

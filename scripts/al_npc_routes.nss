@@ -6,9 +6,9 @@
 //   r_slot         (int)    active slot
 //   r_idx          (int)    active index (optional)
 
-#include "al_activities_inc"
+#include "al_acts_inc"
 #include "al_constants_inc"
-#include "al_npc_registry_inc"
+#include "al_npc_reg_inc"
 
 string AL_GetRoutePrefix(int nSlot)
 {

@@ -9,7 +9,7 @@
 **Симптом:**
 
 * `AL_CacheRoutesForAllSlots` сначала пытается кешировать `AL_WP_S0..AL_WP_S5` для каждого слота, а если их нет — кеширует маршруты по тегам активности.
-* При обработке слота в `AL_NPC_OnUserDefined` маршрут будет поставлен в очередь **только если** `AL_ActivityHasRequiredRoute` вернёт `TRUE`.
+* При обработке слота в `al_npc_onud` маршрут будет поставлен в очередь **только если** `AL_ActivityHasRequiredRoute` вернёт `TRUE`.
 * `AL_ActivityHasRequiredRoute` возвращает `TRUE` **только** для активностей, явно требующих маршрута (`AL_WP_PACE`, `AL_WP_WWP`).
 
 **Следствие:**
@@ -30,7 +30,7 @@
 
 **Симптом:**
 
-При первом входе PC в область `AL_Area_OnEnter` вызывает `AL_UnhideAndResyncRegisteredNPCs`, но **не выполняет** синхронизацию реестра (`AL_SyncAreaNPCRegistry`).
+При первом входе PC в область `al_area_onenter` вызывает `AL_UnhideAndResyncRegisteredNPCs`, но **не выполняет** синхронизацию реестра (`AL_SyncAreaNPCRegistry`).
 
 **Риск:**
 

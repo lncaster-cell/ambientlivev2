@@ -7,12 +7,12 @@
 
 ## Toolset bindings
 
-* Area OnEnter: `AL_Area_OnEnter`
-* Area OnExit: `AL_Area_OnExit`
-* Module OnClientLeave: `AL_Module_OnClientLeave`
-* NPC OnSpawn (registration): `AL_NPC_OnSpawn`
-* NPC OnDeath (unregister): `AL_NPC_OnDeath`
-* NPC OnUserDefined: `AL_NPC_OnUserDefined`
+* Area OnEnter: `al_area_onenter`
+* Area OnExit: `al_area_onexit`
+* Module OnClientLeave: `al_mod_onleave`
+* NPC OnSpawn (registration): `al_npc_onspawn`
+* NPC OnDeath (unregister): `al_npc_ondeath`
+* NPC OnUserDefined: `al_npc_onud`
 
 ## Role activity defaults
 
@@ -21,7 +21,7 @@ On spawn the system will map that role to a default activity and fill slots `a0.
 the matching activity ID. This happens once per NPC and marks `al_role_applied` so custom
 slot values can still be set manually afterwards.
 
-Available roles are declared in `AL_Role_Activities_Inc`:
+Available roles are declared in `al_role_acts_inc.nss`:
 
 * `AL_ROLE_BARTENDER`, `AL_ROLE_BARMAID`, `AL_ROLE_LIGHT_KEEPER`
 * `AL_ROLE_SMITH`, `AL_ROLE_COOK`, `AL_ROLE_MUSICIAN`
@@ -41,12 +41,12 @@ without needing to respawn the NPC.
 Attach the scripts in the toolset event slots:
 
 * Area events:
-  * OnEnter → `AL_Area_OnEnter`
-  * OnExit → `AL_Area_OnExit`
+  * OnEnter → `al_area_onenter`
+  * OnExit → `al_area_onexit`
   * OnHeartbeat → leave empty (system uses AreaTick via DelayCommand)
 * Module events:
-  * OnClientLeave → `AL_Module_OnClientLeave`
+  * OnClientLeave → `al_mod_onleave`
 * NPC events:
-  * OnSpawn → `AL_NPC_OnSpawn`
-  * OnDeath → `AL_NPC_OnDeath`
-  * OnUserDefined → `AL_NPC_OnUserDefined`
+  * OnSpawn → `al_npc_onspawn`
+  * OnDeath → `al_npc_ondeath`
+  * OnUserDefined → `al_npc_onud`

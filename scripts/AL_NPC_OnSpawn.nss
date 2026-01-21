@@ -2,11 +2,13 @@
 
 #include "AL_Constants_Inc"
 #include "AL_NPC_Registry_Inc"
+#include "AL_Role_Activities_Inc"
 
 void main()
 {
     object oNpc = OBJECT_SELF;
     SetLocalInt(oNpc, "l", -1);
+    AL_ApplyRoleActivities(oNpc);
 
     AL_RegisterNPC(oNpc);
 

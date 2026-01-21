@@ -1,8 +1,8 @@
 // NPC OnUserDefined: attach to NPC OnUserDefined in the toolset.
 
 #include "al_constants_inc"
-#include "al_npc_activities_inc"
-#include "al_npc_routes_inc"
+#include "al_npc_acts_inc"
+#include "al_npc_routes"
 
 void main()
 {

@@ -57,7 +57,7 @@ void main()
 
         if (iPlayers == 0)
         {
-            SetLocalInt(oArea, "t", 0);
+            SetLocalInt(oArea, "t", GetLocalInt(oArea, "t") + 1);
         }
 
         AL_SignalRegisteredNPCs(oArea, AL_EVENT_AREA_EXIT);

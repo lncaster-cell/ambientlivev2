@@ -1,10 +1,8 @@
-// Area OnEnter: attach to the Area OnEnter event in the toolset.
+// Shared Area tick helper: scheduled every 45s while players are present.
 
-const int AL_EVT_RESYNC = 3006;
+const float AL_TICK_PERIOD = 45.0;
 
-#include "AL_Area_Tick_Inc"
-
-void AL_ResyncRegisteredNPCs(object oArea)
+void AL_BroadcastSlot(object oArea, int nSlot)
 {
     int iCount = GetLocalInt(oArea, "n");
     int i = 0;
@@ -30,37 +28,22 @@ void AL_ResyncRegisteredNPCs(object oArea)
             continue;
         }
 
-        SetScriptHidden(oNpc, FALSE);
-        SignalEvent(oNpc, EventUserDefined(AL_EVT_RESYNC));
+        SignalEvent(oNpc, EventUserDefined(3000 + nSlot));
         i++;
     }
 }
 
-void main()
+void AreaTick(object oArea, int nToken)
 {
-    object oArea = OBJECT_SELF;
-    object oEntering = GetEnteringObject();
-
-    if (!GetIsObjectValid(oEntering))
+    if (GetLocalInt(oArea, "p") <= 0)
     {
         return;
     }
 
-    if (!GetIsPC(oEntering))
+    if (nToken != GetLocalInt(oArea, "t"))
     {
         return;
     }
-
-    int iPlayers = GetLocalInt(oArea, "p") + 1;
-    SetLocalInt(oArea, "p", iPlayers);
-
-    if (iPlayers != 1)
-    {
-        return;
-    }
-
-    int iToken = GetLocalInt(oArea, "t") + 1;
-    SetLocalInt(oArea, "t", iToken);
 
     int iSlot = GetTimeHour() / 4;
     if (iSlot < 0)
@@ -72,8 +55,13 @@ void main()
         iSlot = 5;
     }
 
-    SetLocalInt(oArea, "s", iSlot);
+    if (iSlot == GetLocalInt(oArea, "s"))
+    {
+        DelayCommand(AL_TICK_PERIOD, AreaTick(oArea, nToken));
+        return;
+    }
 
-    AL_ResyncRegisteredNPCs(oArea);
-    DelayCommand(AL_TICK_PERIOD, AreaTick(oArea, iToken));
+    SetLocalInt(oArea, "s", iSlot);
+    AL_BroadcastSlot(oArea, iSlot);
+    DelayCommand(AL_TICK_PERIOD, AreaTick(oArea, nToken));
 }

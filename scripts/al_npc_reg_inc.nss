@@ -1,4 +1,4 @@
-// NPC registry helpers: dense array locals n, n0..n99 on areas.
+// NPC registry helpers: dense array locals al_npc_count, al_npc_0..al_npc_99 on areas.
 // Registry synchronization runs only at the area level (see AreaTick).
 
 #include "al_constants_inc"
@@ -14,13 +14,13 @@ int AL_PruneRegistrySlot(object oArea, int iIndex, int iCount)
 
     if (iIndex != iLastIndex)
     {
-        object oSwap = GetLocalObject(oArea, "n" + IntToString(iLastIndex));
-        SetLocalObject(oArea, "n" + IntToString(iIndex), oSwap);
+        object oSwap = GetLocalObject(oArea, "al_npc_" + IntToString(iLastIndex));
+        SetLocalObject(oArea, "al_npc_" + IntToString(iIndex), oSwap);
     }
 
-    DeleteLocalObject(oArea, "n" + IntToString(iLastIndex));
+    DeleteLocalObject(oArea, "al_npc_" + IntToString(iLastIndex));
     iCount--;
-    SetLocalInt(oArea, "n", iCount);
+    SetLocalInt(oArea, "al_npc_count", iCount);
     return iCount;
 }
 
@@ -35,12 +35,12 @@ void AL_RegisterNPC(object oNpc)
 
     SetLocalObject(oNpc, "al_last_area", oArea);
 
-    int iCount = GetLocalInt(oArea, "n");
+    int iCount = GetLocalInt(oArea, "al_npc_count");
     int iIndex = 0;
 
     while (iIndex < iCount)
     {
-        object oEntry = GetLocalObject(oArea, "n" + IntToString(iIndex));
+        object oEntry = GetLocalObject(oArea, "al_npc_" + IntToString(iIndex));
 
         if (!GetIsObjectValid(oEntry))
         {
@@ -61,8 +61,8 @@ void AL_RegisterNPC(object oNpc)
         return;
     }
 
-    SetLocalObject(oArea, "n" + IntToString(iCount), oNpc);
-    SetLocalInt(oArea, "n", iCount + 1);
+    SetLocalObject(oArea, "al_npc_" + IntToString(iCount), oNpc);
+    SetLocalInt(oArea, "al_npc_count", iCount + 1);
 }
 
 void AL_UnregisterNPC(object oNpc)
@@ -79,12 +79,12 @@ void AL_UnregisterNPC(object oNpc)
         return;
     }
 
-    int iCount = GetLocalInt(oArea, "n");
+    int iCount = GetLocalInt(oArea, "al_npc_count");
     int iIndex = 0;
 
     while (iIndex < iCount)
     {
-        object oEntry = GetLocalObject(oArea, "n" + IntToString(iIndex));
+        object oEntry = GetLocalObject(oArea, "al_npc_" + IntToString(iIndex));
 
         if (oEntry == oNpc)
         {
@@ -98,12 +98,12 @@ void AL_UnregisterNPC(object oNpc)
 
 void AL_SyncAreaNPCRegistry(object oArea)
 {
-    int iCount = GetLocalInt(oArea, "n");
+    int iCount = GetLocalInt(oArea, "al_npc_count");
     int i = 0;
 
     while (i < iCount)
     {
-        string sKey = "n" + IntToString(i);
+        string sKey = "al_npc_" + IntToString(i);
         object oNpc = GetLocalObject(oArea, sKey);
 
         if (!GetIsObjectValid(oNpc))
@@ -149,12 +149,12 @@ void AL_StartNPCRegistryTracking(object oNpc)
 
 void AL_HideRegisteredNPCs(object oArea)
 {
-    int iCount = GetLocalInt(oArea, "n");
+    int iCount = GetLocalInt(oArea, "al_npc_count");
     int i = 0;
 
     while (i < iCount)
     {
-        string sKey = "n" + IntToString(i);
+        string sKey = "al_npc_" + IntToString(i);
         object oNpc = GetLocalObject(oArea, sKey);
 
         if (!GetIsObjectValid(oNpc))
@@ -175,12 +175,12 @@ void AL_HideRegisteredNPCs(object oArea)
 
 void AL_UnhideAndResyncRegisteredNPCs(object oArea)
 {
-    int iCount = GetLocalInt(oArea, "n");
+    int iCount = GetLocalInt(oArea, "al_npc_count");
     int i = 0;
 
     while (i < iCount)
     {
-        string sKey = "n" + IntToString(i);
+        string sKey = "al_npc_" + IntToString(i);
         object oNpc = GetLocalObject(oArea, sKey);
 
         if (!GetIsObjectValid(oNpc))
@@ -197,12 +197,12 @@ void AL_UnhideAndResyncRegisteredNPCs(object oArea)
 
 void AL_BroadcastUserEvent(object oArea, int nEvent)
 {
-    int iCount = GetLocalInt(oArea, "n");
+    int iCount = GetLocalInt(oArea, "al_npc_count");
     int i = 0;
 
     while (i < iCount)
     {
-        string sKey = "n" + IntToString(i);
+        string sKey = "al_npc_" + IntToString(i);
         object oNpc = GetLocalObject(oArea, sKey);
 
         if (!GetIsObjectValid(oNpc))

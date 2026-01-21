@@ -119,6 +119,7 @@ Locals (SetLocalInt / GetLocalInt) — дешёвый способ хранит�
 | Local | Тип | Смысл |
 | --- | --- | --- |
 | l | int | последний применённый слот (например, старт = -1) |
+| a0..a5 | int | активность для слота (ID активности, 0 = скрыт) |
 
 ## 7) Основные потоки (control flow)
 
@@ -252,3 +253,94 @@ Locals (SetLocalInt / GetLocalInt) — дешёвый способ хранит�
 - пока слот не меняется — нет обхода NPC и нет рассылок;
 - при смене слота — ровно одна рассылка EVT_SLOT_x всем NPC;
 - при последнем выходе PC — тик прекращается через токен, NPC скрываются.
+
+## 13) V2: активности, роли и анимации
+
+### 13.1 Роли и пререквизиты по тегам
+
+#### Тренировки
+
+- Требуются NPC-мишени/партнёры: `FACTION_NPC1`, `FACTION_NPC2`.
+- Используют активности:
+  - `NpcTrainingOne` (ID 24)
+  - `NpcTrainingTwo` (ID 25)
+
+#### Trainer pacing / WWP
+
+- Требуются заранее заданные/закэшированные waypoint’ы (без поиска):
+  - `AL_WP_PACE`
+  - `AL_WP_WWP`
+- Допустима схема по слотам:
+  - `AL_WP_S0`..`AL_WP_S5`
+
+#### Вор
+
+- `NpcThief` (ID 33) должен уметь циклически менять цель/точку (редкие фазовые переключения).
+
+#### Barmaid / Bartender
+
+- `NpcBarmaid` (ID 41) требует параллельной активности `NpcBartender` (ID 42).
+- Нужные теги/точки:
+  - `WP_BAR`
+  - `WP_BARTENDER`
+  - `WP_KEG`
+
+### 13.2 Карта активностей (ID → функция → анимации)
+
+Формат анимаций: Custom (строки) / Numeric (PlayAnimation ID).
+
+Для реализации рекомендуется использовать статическую таблицу из include-файла
+`AL_Activities_Inc.nss`, чтобы хранить отображение ID → анимации без runtime-поисков.
+
+| ID | Функция | Анимации (Custom) | Анимации (Numeric) |
+| --- | --- | --- | --- |
+| 0 | NpcHidden | — | — |
+| 1 | NpcActOne | lookleft, lookright | — |
+| 2 | NpcActTwo | lookleft, lookright | — |
+| 3 | NpcDinner | sitdrink, siteat, sitidle | — |
+| 4 | NpcMidnightBed | laydownB, proneB | — |
+| 5 | NpcSleepBed | laydownB, proneB | — |
+| 6 | NpcWake | sitdrink, siteat, sitidle | — |
+| 7 | NpcAgree | chuckle, flirt, nodyes | — |
+| 8 | NpcAngry | intimidate, nodno, talkshout | 10 |
+| 9 | NpcSad | talksad, tired | 9 |
+| 10 | NpcCook | cooking02, disablefront | 35, 36 |
+| 11 | NpcDanceFemale | curtsey, dance01 | 27 |
+| 12 | NpcDanceMale | bow, dance01, dance02 | — |
+| 13 | NpcDrum | bow, playdrum | — |
+| 14 | NpcFlute | curtsey, playflute | — |
+| 15 | NpcForge | craft01, dustoff, forge01 | — |
+| 16 | NpcGuitar | bow, playguitar | — |
+| 17 | NpcWoodsman | *1attack01, kneelidle | — |
+| 18 | NpcMeditate | meditate | — |
+| 19 | NpcPost | lookleft, lookright | — |
+| 20 | NpcRead | sitidle, sitread, sitteat | — |
+| 21 | NpcSit | sitfidget, sitidle, sittalk, sittalk01, sittalk02 | — |
+| 22 | NpcSitDinner | sitdrink, siteat, sitidle, sittalk, sittalk01, sittalk02 | — |
+| 23 | NpcStandChat | chuckle, lookleft, lookright, nodno, nodyes, shrug, talk01, talk02, talklaugh | — |
+| 24 | NpcTrainingOne | — | — |
+| 25 | NpcTrainingTwo | — | — |
+| 26 | NpcTrainerPace | — | — |
+| 27 | NpcWwp | kneelidle, lookleft, lookright | — |
+| 28 | NpcCheer | chuckle, clapping, talklaugh, victory | — |
+| 29 | NpcCookMulti | cooking01, cooking02, craft01, disablefront, dustoff, forge01, gettable, kneelidle, kneelup, openlock, scratchhead | — |
+| 30 | NpcForgeMulti | craft01, dustoff, forge01, forge02, gettable, kneeldown, kneelidle, kneelup, openlock | — |
+| 31 | NpcMidnight90 | laydownB, proneB | — |
+| 32 | NpcSleep90 | laydownB, proneB | — |
+| 33 | NpcThief | chuckle, getground, gettable, openlock | — |
+| 34 | NpcHide | — | — |
+| 35 | NpcSeek | — | — |
+| 36 | NpcThief2 | disableground, sleightofhand, sneak | — |
+| 37 | NpcAssassin | sneak | — |
+| 38 | NpcMerchantMulti | bored, getground, gettable, openlock, sleightofhand, yawn | — |
+| 39 | NpcKneelTalk | kneelidle, kneeltalk | — |
+| 40 | NpcLightKeeper | — | — |
+| 41 | NpcBarmaid | — | — |
+| 42 | NpcBartender | gettable, lookright, openlock, yawn | — |
+| 91–98 | LocateWrapper | — | — |
+| 200 | reserved | — | — |
+
+### 13.3 Дополнительные helper-анимации
+
+- `situp`
+- `idle`

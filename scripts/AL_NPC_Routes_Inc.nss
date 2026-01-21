@@ -28,14 +28,16 @@ void AL_QueueRoute(object oNpc, int nSlot, int bClearActions)
     int iCount = AL_GetRouteCount(oNpc, nSlot);
     int i = 0;
 
-    if (iCount <= 0)
-    {
-        return;
-    }
-
     if (bClearActions)
     {
         AssignCommand(oNpc, ClearAllActions());
+    }
+
+    if (iCount <= 0)
+    {
+        DeleteLocalInt(oNpc, "r_slot");
+        DeleteLocalInt(oNpc, "r_idx");
+        return;
     }
 
     SetLocalInt(oNpc, "r_slot", nSlot);

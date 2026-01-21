@@ -16,13 +16,15 @@ void AL_CacheTrainingPartners(object oArea)
         return;
     }
 
-    object oNpc1 = GetObjectByTag("FACTION_NPC1");
+    // Preconfigure training partners via toolset/bootstrap on the area:
+    // local object "al_training_npc1_ref" + "al_training_npc2_ref".
+    object oNpc1 = GetLocalObject(oArea, "al_training_npc1_ref");
     if (GetIsObjectValid(oNpc1) && GetArea(oNpc1) == oArea)
     {
         SetLocalObject(oArea, "al_training_npc1", oNpc1);
     }
 
-    object oNpc2 = GetObjectByTag("FACTION_NPC2");
+    object oNpc2 = GetLocalObject(oArea, "al_training_npc2_ref");
     if (GetIsObjectValid(oNpc2) && GetArea(oNpc2) == oArea)
     {
         SetLocalObject(oArea, "al_training_npc2", oNpc2);

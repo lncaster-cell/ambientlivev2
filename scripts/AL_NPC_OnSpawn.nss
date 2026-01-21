@@ -18,24 +18,24 @@ void AL_InitTrainingPartner(object oNpc)
     }
 
     string sTag = GetTag(oNpc);
-    string sPartnerTag = "";
     string sAreaPartnerKey = "";
     string sAreaSelfKey = "";
+    string sAreaPartnerRefKey = "";
 
     if (sTag == "FACTION_NPC1")
     {
-        sPartnerTag = "FACTION_NPC2";
         sAreaSelfKey = "al_training_npc1";
         sAreaPartnerKey = "al_training_npc2";
+        sAreaPartnerRefKey = "al_training_npc2_ref";
     }
     else if (sTag == "FACTION_NPC2")
     {
-        sPartnerTag = "FACTION_NPC1";
         sAreaSelfKey = "al_training_npc2";
         sAreaPartnerKey = "al_training_npc1";
+        sAreaPartnerRefKey = "al_training_npc1_ref";
     }
 
-    if (sPartnerTag == "")
+    if (sAreaPartnerKey == "")
     {
         return;
     }
@@ -46,6 +46,8 @@ void AL_InitTrainingPartner(object oNpc)
 
     if (GetIsObjectValid(oArea))
     {
+        // Area locals seeded via toolset/bootstrap:
+        // "al_training_npc1_ref" / "al_training_npc2_ref" point to the pair.
         if (GetLocalInt(oArea, "al_training_partner_cached"))
         {
             object oCachedSelf = GetLocalObject(oArea, sAreaSelfKey);
@@ -64,11 +66,12 @@ void AL_InitTrainingPartner(object oNpc)
 
     if (!GetIsObjectValid(oPartner))
     {
-        if (!GetIsObjectValid(oArea) || !GetLocalInt(oArea, "al_training_partner_cached"))
+        if (GetIsObjectValid(oArea))
         {
-            oPartner = GetObjectByTag(sPartnerTag);
-            if (GetIsObjectValid(oArea) && GetIsObjectValid(oPartner) && GetArea(oPartner) == oArea)
+            object oRefPartner = GetLocalObject(oArea, sAreaPartnerRefKey);
+            if (GetIsObjectValid(oRefPartner) && GetArea(oRefPartner) == oArea)
             {
+                oPartner = oRefPartner;
                 SetLocalObject(oArea, sAreaPartnerKey, oPartner);
             }
         }
@@ -98,24 +101,24 @@ void AL_InitBarPair(object oNpc)
     }
 
     int nRole = GetLocalInt(oNpc, AL_ROLE_LOCAL);
-    string sPartnerTag = "";
     string sAreaPartnerKey = "";
     string sAreaSelfKey = "";
+    string sAreaPartnerRefKey = "";
 
     if (nRole == AL_ROLE_BARTENDER)
     {
-        sPartnerTag = "BARMAID";
         sAreaSelfKey = "al_bar_bartender";
         sAreaPartnerKey = "al_bar_barmaid";
+        sAreaPartnerRefKey = "al_bar_barmaid_ref";
     }
     else if (nRole == AL_ROLE_BARMAID)
     {
-        sPartnerTag = "BARTENDER";
         sAreaSelfKey = "al_bar_barmaid";
         sAreaPartnerKey = "al_bar_bartender";
+        sAreaPartnerRefKey = "al_bar_bartender_ref";
     }
 
-    if (sPartnerTag == "")
+    if (sAreaPartnerKey == "")
     {
         return;
     }
@@ -125,16 +128,22 @@ void AL_InitBarPair(object oNpc)
 
     if (GetIsObjectValid(oArea))
     {
+        // Area locals seeded via toolset/bootstrap:
+        // "al_bar_bartender_ref" / "al_bar_barmaid_ref" point to the pair.
         SetLocalObject(oArea, sAreaSelfKey, oNpc);
         oPartner = GetLocalObject(oArea, sAreaPartnerKey);
     }
 
     if (!GetIsObjectValid(oPartner))
     {
-        oPartner = GetObjectByTag(sPartnerTag);
-        if (GetIsObjectValid(oArea) && GetIsObjectValid(oPartner) && GetArea(oPartner) == oArea)
+        if (GetIsObjectValid(oArea))
         {
-            SetLocalObject(oArea, sAreaPartnerKey, oPartner);
+            object oRefPartner = GetLocalObject(oArea, sAreaPartnerRefKey);
+            if (GetIsObjectValid(oRefPartner) && GetArea(oRefPartner) == oArea)
+            {
+                oPartner = oRefPartner;
+                SetLocalObject(oArea, sAreaPartnerKey, oPartner);
+            }
         }
         else
         {

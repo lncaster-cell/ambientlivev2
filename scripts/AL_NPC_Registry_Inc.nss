@@ -23,6 +23,8 @@ int AL_PruneRegistrySlot(object oArea, int iIndex, int iCount)
     return iCount;
 }
 
+const float AL_NPC_AREA_CHECK_PERIOD = 6.0;
+
 void AL_RegisterNPC(object oNpc)
 {
     object oArea = GetArea(oNpc);
@@ -64,7 +66,12 @@ void AL_RegisterNPC(object oNpc)
 
 void AL_UnregisterNPC(object oNpc)
 {
-    object oArea = GetArea(oNpc);
+    object oArea = GetLocalObject(oNpc, "al_last_area");
+
+    if (!GetIsObjectValid(oArea))
+    {
+        oArea = GetArea(oNpc);
+    }
 
     if (!GetIsObjectValid(oArea))
     {
@@ -86,6 +93,49 @@ void AL_UnregisterNPC(object oNpc)
 
         iIndex++;
     }
+}
+
+void AL_CheckNPCRegistryArea(object oNpc)
+{
+    if (!GetIsObjectValid(oNpc))
+    {
+        return;
+    }
+
+    object oCurrentArea = GetArea(oNpc);
+    object oLastArea = GetLocalObject(oNpc, "al_last_area");
+
+    if (GetIsObjectValid(oCurrentArea))
+    {
+        if (!GetIsObjectValid(oLastArea))
+        {
+            SetLocalObject(oNpc, "al_last_area", oCurrentArea);
+        }
+        else if (oCurrentArea != oLastArea)
+        {
+            AL_UnregisterNPC(oNpc);
+            SetLocalObject(oNpc, "al_last_area", oCurrentArea);
+            AL_RegisterNPC(oNpc);
+        }
+    }
+
+    DelayCommand(AL_NPC_AREA_CHECK_PERIOD, AL_CheckNPCRegistryArea(oNpc));
+}
+
+void AL_StartNPCRegistryTracking(object oNpc)
+{
+    if (!GetIsObjectValid(oNpc))
+    {
+        return;
+    }
+
+    object oArea = GetArea(oNpc);
+    if (GetIsObjectValid(oArea))
+    {
+        SetLocalObject(oNpc, "al_last_area", oArea);
+    }
+
+    AL_CheckNPCRegistryArea(oNpc);
 }
 
 void AL_HideRegisteredNPCs(object oArea)

@@ -181,6 +181,7 @@ void main()
     }
 
     AL_RegisterNPC(oNpc);
+    AL_StartNPCRegistryTracking(oNpc);
 
     object oArea = GetArea(oNpc);
     if (GetIsObjectValid(oArea))

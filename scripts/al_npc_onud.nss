@@ -38,6 +38,24 @@ void AL_MarkAnimationApplied(object oNpc, int nIntervalSeconds)
     SetLocalInt(oNpc, "al_anim_next", nNext);
 }
 
+void AL_DebugLog(object oNpc, string sMessage)
+{
+    if (GetLocalInt(oNpc, "al_debug") != 1)
+    {
+        object oArea = GetArea(oNpc);
+        if (!GetIsObjectValid(oArea) || GetLocalInt(oArea, "al_debug") != 1)
+        {
+            return;
+        }
+    }
+
+    object oPc = GetFirstPC();
+    if (GetIsObjectValid(oPc))
+    {
+        SendMessageToPC(oPc, sMessage);
+    }
+}
+
 void main()
 {
     object oNpc = OBJECT_SELF;
@@ -95,6 +113,9 @@ void main()
 
     SetLocalInt(oNpc, "al_last_slot", nSlot);
     int nActivity = AL_GetActivityForSlot(oNpc, nSlot);
+    AL_DebugLog(oNpc, "AL_EVT " + IntToString(nEvent)
+        + " slot=" + IntToString(nSlot)
+        + " activity=" + IntToString(nActivity));
     if (nActivity == AL_ACT_NPC_HIDDEN)
     {
         AL_ClearActiveRoute(oNpc, /*bClearActions=*/ TRUE);
@@ -109,6 +130,9 @@ void main()
     {
         bRequiresRoute = FALSE;
     }
+    AL_DebugLog(oNpc, "routeCount=" + IntToString(AL_GetRouteCount(oNpc, nSlot))
+        + " requiresRoute=" + IntToString(bRequiresRoute)
+        + " sleep=" + IntToString(bSleepActivity));
     if (!bRequiresRoute && nEvent != AL_EVT_ROUTE_REPEAT)
     {
         AL_ClearActiveRoute(oNpc, /*bClearActions=*/ TRUE);

@@ -39,14 +39,16 @@ void AL_SignalRegisteredNPCs(object oArea, int nEvent)
     }
 }
 
-void AreaTick(object oArea, int nToken)
+void AreaTick(object oArea)
 {
-    if (GetLocalInt(oArea, "t") != nToken)
+    if (GetLocalInt(oArea, "p") <= 0)
     {
         return;
     }
 
-    if (GetLocalInt(oArea, "p") <= 0)
+    int iToken = GetLocalInt(oArea, "t");
+
+    if (GetLocalInt(oArea, "ts") != iToken)
     {
         return;
     }
@@ -56,12 +58,13 @@ void AreaTick(object oArea, int nToken)
 
     AL_SignalRegisteredNPCs(oArea, AL_EVENT_TICK);
 
-    DelayCommand(45.0, AreaTick(oArea, nToken));
+    SetLocalInt(oArea, "ts", iToken);
+    DelayCommand(45.0, AreaTick(oArea));
 }
 
 void main()
 {
     object oArea = OBJECT_SELF;
 
-    AreaTick(oArea, GetLocalInt(oArea, "t"));
+    AreaTick(oArea);
 }

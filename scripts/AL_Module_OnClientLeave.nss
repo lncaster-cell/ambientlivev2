@@ -4,7 +4,7 @@
 
 void main()
 {
-    object oLeaving = GetLeavingObject();
+    object oLeaving = GetExitingObject();
 
     if (!GetIsObjectValid(oLeaving))
     {

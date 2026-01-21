@@ -1,6 +1,7 @@
 // Area OnEnter: attach to the Area OnEnter event in the toolset.
 
 const int AL_EVT_RESYNC = 3006;
+const float AL_TICK_PERIOD = 45.0;
 
 void AL_ResyncRegisteredNPCs(object oArea)
 {
@@ -73,5 +74,5 @@ void main()
     SetLocalInt(oArea, "s", iSlot);
 
     AL_ResyncRegisteredNPCs(oArea);
-    ExecuteScript("AL_Area_Tick", oArea);
+    DelayCommand(AL_TICK_PERIOD, ExecuteScript("AL_Area_Tick", oArea));
 }

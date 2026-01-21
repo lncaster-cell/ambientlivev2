@@ -1,5 +1,7 @@
 // NPC OnUserDefined: attach to NPC OnUserDefined in the toolset.
 
+#include "AL_NPC_Routes_Inc"
+
 void main()
 {
     object oNpc = OBJECT_SELF;
@@ -34,4 +36,5 @@ void main()
     }
 
     SetLocalInt(oNpc, "l", nSlot);
+    AL_QueueRoute(oNpc, nSlot, TRUE);
 }

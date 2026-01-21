@@ -64,6 +64,12 @@ void AL_HandleResyncSlotOverrides(object oNpc)
     string sA3 = GetLocalString(oNpc, "a3");
     string sA4 = GetLocalString(oNpc, "a4");
     string sA5 = GetLocalString(oNpc, "a5");
+    int nA0 = AL_GetActivitySlotInt(oNpc, 0);
+    int nA1 = AL_GetActivitySlotInt(oNpc, 1);
+    int nA2 = AL_GetActivitySlotInt(oNpc, 2);
+    int nA3 = AL_GetActivitySlotInt(oNpc, 3);
+    int nA4 = AL_GetActivitySlotInt(oNpc, 4);
+    int nA5 = AL_GetActivitySlotInt(oNpc, 5);
     int bHasSlotOverride = sA0 != ""
         || sA1 != ""
         || sA2 != ""
@@ -76,12 +82,18 @@ void AL_HandleResyncSlotOverrides(object oNpc)
         SetLocalInt(oNpc, "al_role_applied", FALSE);
     }
 
-    AL_DebugLog(oNpc, "resync slots a0=" + sA0
-        + " a1=" + sA1
-        + " a2=" + sA2
-        + " a3=" + sA3
-        + " a4=" + sA4
-        + " a5=" + sA5
+    string sLogA0 = sA0 != "" ? sA0 : IntToString(nA0);
+    string sLogA1 = sA1 != "" ? sA1 : IntToString(nA1);
+    string sLogA2 = sA2 != "" ? sA2 : IntToString(nA2);
+    string sLogA3 = sA3 != "" ? sA3 : IntToString(nA3);
+    string sLogA4 = sA4 != "" ? sA4 : IntToString(nA4);
+    string sLogA5 = sA5 != "" ? sA5 : IntToString(nA5);
+    AL_DebugLog(oNpc, "resync slots a0=" + sLogA0
+        + " a1=" + sLogA1
+        + " a2=" + sLogA2
+        + " a3=" + sLogA3
+        + " a4=" + sLogA4
+        + " a5=" + sLogA5
         + " override=" + IntToString(bHasSlotOverride));
 }
 

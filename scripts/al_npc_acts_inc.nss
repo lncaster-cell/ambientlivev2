@@ -9,15 +9,37 @@ string AL_GetActivitySlotKey(int nSlot)
     return "a" + IntToString(nSlot);
 }
 
+int AL_GetActivitySlotInt(object oNpc, int nSlot)
+{
+    string sKey = AL_GetActivitySlotKey(nSlot);
+    int nActivity = GetLocalInt(oNpc, sKey);
+    if (nActivity != 0)
+    {
+        return nActivity;
+    }
+
+    string sValue = GetLocalString(oNpc, sKey);
+    if (sValue == "")
+    {
+        return 0;
+    }
+
+    int nParsed = StringToInt(sValue);
+    SetLocalInt(oNpc, sKey, nParsed);
+    DeleteLocalString(oNpc, sKey);
+
+    return nParsed;
+}
+
 int AL_GetActivityForSlot(object oNpc, int nSlot)
 {
-    int nActivity = GetLocalInt(oNpc, AL_GetActivitySlotKey(nSlot));
+    int nActivity = AL_GetActivitySlotInt(oNpc, nSlot);
     if (nActivity > 0 || nSlot == 0)
     {
         return nActivity;
     }
 
-    return GetLocalInt(oNpc, AL_GetActivitySlotKey(0));
+    return AL_GetActivitySlotInt(oNpc, 0);
 }
 
 string AL_TrimToken(string sToken)

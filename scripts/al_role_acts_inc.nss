@@ -46,7 +46,7 @@ void AL_SetRoleActivitySlots(object oNpc, int nActivity)
     while (iSlot <= AL_SLOT_MAX)
     {
         string sKey = "a" + IntToString(iSlot);
-        if (GetLocalInt(oNpc, sKey) <= 0)
+        if (GetLocalInt(oNpc, sKey) <= 0 && GetLocalString(oNpc, sKey) == "")
         {
             SetLocalInt(oNpc, sKey, nActivity);
         }
@@ -60,7 +60,8 @@ int AL_HasCustomActivitySlots(object oNpc)
 
     while (iSlot <= AL_SLOT_MAX)
     {
-        if (GetLocalInt(oNpc, "a" + IntToString(iSlot)) > 0)
+        string sKey = "a" + IntToString(iSlot);
+        if (GetLocalInt(oNpc, sKey) > 0 || GetLocalString(oNpc, sKey) != "")
         {
             return TRUE;
         }

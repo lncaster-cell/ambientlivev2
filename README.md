@@ -279,7 +279,7 @@ OnExit или OnClientLeave:
 | 7 | Trainer | 26 (`AL_ACT_NPC_TRAINER_PACE`) |
 | 8 | Thief | 33 (`AL_ACT_NPC_THIEF`) |
 | 9 | Merchant | 38 (`AL_ACT_NPC_MERCHANT_MULTI`) |
-| 10 | Guard | 23 (`AL_ACT_NPC_STAND_CHAT`) |
+| 10 | Guard | 43 (`AL_ACT_NPC_GUARD`) |
 | 11 | Citizen | 1 (`AL_ACT_NPC_ACT_ONE`) |
 
 ### Активности (ID → анимации)
@@ -335,6 +335,7 @@ OnExit или OnClientLeave:
 | 40 | LightKeeper | — | — | — |
 | 41 | Barmaid | — | — | требует барную пару |
 | 42 | Bartender | gettable, lookright, openlock, yawn | — | — |
+| 43 | Guard | bored, lookleft, lookright, sigh | — | — |
 | 91–98 | LocateWrapper | см. `al_acts_inc.nss` | — | — |
 | 200 | reserved | — | — | — |
 

@@ -15,7 +15,7 @@ int AL_GetAmbientLifeDaySeconds()
 
 int AL_GetRepeatAnimIntervalSeconds()
 {
-    return 5 + Random(8);
+    return 15 + Random(16);
 }
 
 int AL_IsRepeatAnimCoolingDown(object oNpc)
@@ -113,9 +113,25 @@ void main()
         AL_ClearActiveRoute(oNpc, /*bClearActions=*/ TRUE);
     }
 
+    int bSkipMoveRepeat = FALSE;
+    if (bRequiresRoute && nEvent == AL_EVT_ROUTE_REPEAT && AL_GetRouteCount(oNpc, nSlot) == 1)
+    {
+        bSkipMoveRepeat = TRUE;
+    }
+
     if (bRequiresRoute)
     {
-        AL_QueueRoute(oNpc, nSlot, nEvent != AL_EVT_ROUTE_REPEAT);
+        if (bSkipMoveRepeat)
+        {
+            float fRepeatDelay = 5.0 + IntToFloat(Random(8));
+
+            AssignCommand(oNpc, ActionWait(fRepeatDelay));
+            AssignCommand(oNpc, ActionDoCommand(SignalEvent(oNpc, EventUserDefined(AL_EVT_ROUTE_REPEAT))));
+        }
+        else
+        {
+            AL_QueueRoute(oNpc, nSlot, nEvent != AL_EVT_ROUTE_REPEAT);
+        }
     }
 
     int bAllowAnimation = TRUE;
@@ -127,7 +143,13 @@ void main()
         }
     }
 
-    if (bAllowAnimation)
+    int bShouldPlay = bAllowAnimation;
+    if (bRequiresRoute && nEvent != AL_EVT_ROUTE_REPEAT)
+    {
+        bShouldPlay = FALSE;
+    }
+
+    if (bShouldPlay)
     {
         int nIntervalSeconds = AL_GetRepeatAnimIntervalSeconds();
         AL_ApplyActivityForSlot(oNpc, nSlot);

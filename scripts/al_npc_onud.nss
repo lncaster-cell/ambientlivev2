@@ -127,7 +127,13 @@ void main()
         }
     }
 
-    if (bAllowAnimation)
+    int bShouldPlay = bAllowAnimation;
+    if (bRequiresRoute && nEvent != AL_EVT_ROUTE_REPEAT)
+    {
+        bShouldPlay = FALSE;
+    }
+
+    if (bShouldPlay)
     {
         int nIntervalSeconds = AL_GetRepeatAnimIntervalSeconds();
         AL_ApplyActivityForSlot(oNpc, nSlot);

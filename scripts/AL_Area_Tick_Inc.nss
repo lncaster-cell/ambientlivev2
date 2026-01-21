@@ -2,6 +2,7 @@
 #include "AL_NPC_Registry_Inc"
 
 // Shared Area tick helper: scheduled every 45s while players are present.
+// NPC registry synchronization is handled here at the area level only.
 
 const float AL_TICK_PERIOD = 45.0;
 
@@ -31,6 +32,8 @@ void AreaTick(object oArea, int nToken)
     {
         return;
     }
+
+    AL_SyncAreaNPCRegistry(oArea);
 
     int iSlot = AL_ComputeTimeSlot();
 

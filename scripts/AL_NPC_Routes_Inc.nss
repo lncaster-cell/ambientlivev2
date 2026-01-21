@@ -130,6 +130,7 @@ void AL_HandleRouteAreaTransition()
         return;
     }
 
+    // Instant registry update on explicit route transitions (no per-NPC timers).
     AL_UnregisterNPC(oNpc);
 
     object oArea = GetArea(oNpc);

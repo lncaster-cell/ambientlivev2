@@ -15,6 +15,27 @@ string AL_GetRoutePrefix(int nSlot)
     return "r" + IntToString(nSlot) + "_";
 }
 
+string AL_GetRouteTagKey(int nSlot)
+{
+    return AL_GetRoutePrefix(nSlot) + "tag";
+}
+
+string AL_GetRouteTag(object oNpc, int nSlot)
+{
+    return GetLocalString(oNpc, AL_GetRouteTagKey(nSlot));
+}
+
+string AL_GetDesiredRouteTag(int nSlot, int nActivity)
+{
+    string sWaypointTag = AL_GetActivityWaypointTag(nActivity);
+    if (sWaypointTag != "")
+    {
+        return sWaypointTag;
+    }
+
+    return "AL_WP_S" + IntToString(nSlot);
+}
+
 int AL_GetRouteCount(object oNpc, int nSlot)
 {
     return GetLocalInt(oNpc, AL_GetRoutePrefix(nSlot) + "n");
@@ -52,6 +73,7 @@ void AL_ClearRoute(object oNpc, int nSlot)
     }
 
     DeleteLocalInt(oNpc, sPrefix + "n");
+    DeleteLocalString(oNpc, AL_GetRouteTagKey(nSlot));
 }
 
 int AL_CacheRouteFromTag(object oNpc, int nSlot, string sTag)
@@ -94,6 +116,7 @@ int AL_CacheRouteFromTag(object oNpc, int nSlot, string sTag)
     if (iCount > 0)
     {
         SetLocalInt(oNpc, sPrefix + "n", iCount);
+        SetLocalString(oNpc, AL_GetRouteTagKey(nSlot), sTag);
     }
 
     return iCount;
@@ -105,19 +128,9 @@ void AL_CacheRoutesForAllSlots(object oNpc)
 
     while (iSlot <= AL_SLOT_MAX)
     {
-        string sSlotTag = "AL_WP_S" + IntToString(iSlot);
-        int iCount = AL_CacheRouteFromTag(oNpc, iSlot, sSlotTag);
-
-        if (iCount <= 0)
-        {
-            int nActivity = GetLocalInt(oNpc, "a" + IntToString(iSlot));
-            string sWaypointTag = AL_GetActivityWaypointTag(nActivity);
-
-            if (sWaypointTag != "")
-            {
-                AL_CacheRouteFromTag(oNpc, iSlot, sWaypointTag);
-            }
-        }
+        int nActivity = GetLocalInt(oNpc, "a" + IntToString(iSlot));
+        string sDesiredTag = AL_GetDesiredRouteTag(iSlot, nActivity);
+        AL_CacheRouteFromTag(oNpc, iSlot, sDesiredTag);
 
         iSlot++;
     }

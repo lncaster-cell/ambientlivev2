@@ -4,6 +4,7 @@
 
 * Area OnEnter: `AL_Area_OnEnter`
 * Area OnExit: `AL_Area_OnExit`
+* Module OnClientLeave: `AL_Module_OnClientLeave`
 * NPC OnSpawn (registration): `AL_NPC_OnSpawn`
 * NPC OnDeath (unregister): `AL_NPC_OnDeath`
 * NPC OnUserDefined: `AL_NPC_OnUserDefined`
@@ -30,6 +31,8 @@ Attach the scripts in the toolset event slots:
   * OnEnter → `AL_Area_OnEnter`
   * OnExit → `AL_Area_OnExit`
   * OnHeartbeat → leave empty (system uses AreaTick via DelayCommand)
+* Module events:
+  * OnClientLeave → `AL_Module_OnClientLeave`
 * NPC events:
   * OnSpawn → `AL_NPC_OnSpawn`
   * OnDeath → `AL_NPC_OnDeath`

@@ -25,6 +25,18 @@ location AL_GetRoutePoint(object oNpc, int nSlot, int iIndex)
     return GetLocalLocation(oNpc, AL_GetRoutePrefix(nSlot) + IntToString(iIndex));
 }
 
+void AL_ClearActiveRoute(object oNpc, int bClearActions)
+{
+    if (bClearActions)
+    {
+        AssignCommand(oNpc, ClearAllActions());
+    }
+
+    DeleteLocalInt(oNpc, "r_slot");
+    DeleteLocalInt(oNpc, "r_idx");
+    DeleteLocalInt(oNpc, "r_active");
+}
+
 void AL_ClearRoute(object oNpc, int nSlot)
 {
     string sPrefix = AL_GetRoutePrefix(nSlot);
@@ -157,9 +169,7 @@ void AL_QueueRoute(object oNpc, int nSlot, int bClearActions)
 
     if (iCount <= 0)
     {
-        DeleteLocalInt(oNpc, "r_slot");
-        DeleteLocalInt(oNpc, "r_idx");
-        SetLocalInt(oNpc, "r_active", FALSE);
+        AL_ClearActiveRoute(oNpc, FALSE);
         return;
     }
 

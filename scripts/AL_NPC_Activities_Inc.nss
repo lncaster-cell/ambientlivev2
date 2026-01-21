@@ -2,6 +2,7 @@
 
 #include "AL_Activities_Inc"
 #include "AL_Constants_Inc"
+#include "AL_NPC_Routes_Inc"
 
 string AL_GetActivitySlotKey(int nSlot)
 {
@@ -117,6 +118,30 @@ void AL_PlayNumericAnimation(int nAnimation)
     ActionPlayAnimation(nAnimation, 1.0, 1.0);
 }
 
+// Requirement checks avoid tag searches by relying on prebuilt locals/routes:
+// - Routes for pacing/WWP use locals r<slot>_n / r<slot>_<idx> (see AL_NPC_Routes_Inc).
+// - Training partners are set via local object "al_training_partner" on the NPC.
+// - Bar pair NPCs are set via local object "al_bar_pair" on the NPC.
+int AL_ActivityHasRequiredRoute(object oNpc, int nSlot, int nActivity)
+{
+    if (AL_GetActivityWaypointTag(nActivity) == "")
+    {
+        return TRUE;
+    }
+
+    return AL_GetRouteCount(oNpc, nSlot) > 0;
+}
+
+int AL_ActivityHasTrainingPartner(object oNpc)
+{
+    return GetIsObjectValid(GetLocalObject(oNpc, "al_training_partner"));
+}
+
+int AL_ActivityHasBarPair(object oNpc)
+{
+    return GetIsObjectValid(GetLocalObject(oNpc, "al_bar_pair"));
+}
+
 void AL_ApplyActivityForSlot(object oNpc, int nSlot)
 {
     if (nSlot < 0 || nSlot > AL_SLOT_MAX)
@@ -129,6 +154,13 @@ void AL_ApplyActivityForSlot(object oNpc, int nSlot)
     if (nActivity == AL_ACT_NPC_HIDDEN)
     {
         return;
+    }
+
+    if (!AL_ActivityHasRequiredRoute(oNpc, nSlot, nActivity)
+        || (AL_ActivityRequiresTrainingPartner(nActivity) && !AL_ActivityHasTrainingPartner(oNpc))
+        || (AL_ActivityRequiresBarPair(nActivity) && !AL_ActivityHasBarPair(oNpc)))
+    {
+        nActivity = AL_ACT_NPC_ACT_ONE;
     }
 
     string sCustom = AL_GetActivityCustomAnims(nActivity);

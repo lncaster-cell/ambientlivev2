@@ -54,6 +54,10 @@ void main()
     }
 
     SetLocalInt(oNpc, "l", nSlot);
-    AL_QueueRoute(oNpc, nSlot, nEvent != AL_EVT_ROUTE_REPEAT);
+    int nActivity = AL_GetActivityForSlot(oNpc, nSlot);
+    if (AL_ActivityHasRequiredRoute(oNpc, nSlot, nActivity))
+    {
+        AL_QueueRoute(oNpc, nSlot, nEvent != AL_EVT_ROUTE_REPEAT);
+    }
     AL_ApplyActivityForSlot(oNpc, nSlot);
 }

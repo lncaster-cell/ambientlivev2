@@ -35,7 +35,7 @@
 >
 > **Важно про имена:** NWN2 ограничивает resref скриптов 16 символами.
 > Поэтому в этом репозитории уже используются короткие имена входных скриптов
-> (например, `AL_Mod_OnLeave`, `AL_NPC_OnUD`). Если вы переименовываете файлы,
+> (например, `al_mod_onleave`, `al_npc_onud`). Если вы переименовываете файлы,
 > следите, чтобы resref оставался ≤ 16 символов — иначе компилятор выдаст
 > `Failed to open RESREF`.
 
@@ -47,23 +47,23 @@
 
 Откройте нужную область и установите:
 
-* **OnEnter** → `AL_Area_OnEnter`
-* **OnExit** → `AL_Area_OnExit`
+* **OnEnter** → `al_area_onenter`
+* **OnExit** → `al_area_onexit`
 * **OnHeartbeat** → оставить пустым
 
 ### 3.2 События модуля (Module)
 
 В свойствах модуля:
 
-* **OnClientLeave** → `AL_Mod_OnLeave`
+* **OnClientLeave** → `al_mod_onleave`
 
 ### 3.3 События NPC
 
 Для каждого NPC, которого должна контролировать система:
 
-* **OnSpawn** → `AL_NPC_OnSpawn`
-* **OnDeath** → `AL_NPC_OnDeath`
-* **OnUserDefined** → `AL_NPC_OnUD`
+* **OnSpawn** → `al_npc_onspawn`
+* **OnDeath** → `al_npc_ondeath`
+* **OnUserDefined** → `al_npc_onud`
 
 ---
 

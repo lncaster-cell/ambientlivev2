@@ -45,4 +45,6 @@ void AL_QueueRoute(object oNpc, int nSlot, int bClearActions)
         ActionMoveToLocation(lPoint);
         i++;
     }
+
+    ActionDoCommand(SignalEvent(oNpc, EventUserDefined(AL_EVT_ROUTE_REPEAT)));
 }

@@ -34,11 +34,18 @@ void main()
         return;
     }
 
-    if (nEvent != AL_EVT_ROUTE_REPEAT && GetLocalInt(oNpc, "l") == nSlot)
+    if (nEvent == AL_EVT_ROUTE_REPEAT)
+    {
+        if (GetLocalInt(oNpc, "l") != nSlot)
+        {
+            return;
+        }
+    }
+    else if (GetLocalInt(oNpc, "l") == nSlot)
     {
         return;
     }
 
     SetLocalInt(oNpc, "l", nSlot);
-    AL_QueueRoute(oNpc, nSlot, TRUE);
+    AL_QueueRoute(oNpc, nSlot, nEvent != AL_EVT_ROUTE_REPEAT);
 }

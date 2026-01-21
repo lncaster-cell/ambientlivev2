@@ -61,6 +61,11 @@ void main()
 
     SetLocalInt(oNpc, "l", nSlot);
     int nActivity = AL_GetActivityForSlot(oNpc, nSlot);
+    if (nActivity == AL_ACT_NPC_HIDDEN)
+    {
+        AL_ClearActiveRoute(oNpc, /*bClearActions=*/ TRUE);
+        return;
+    }
     int bRequiresRoute = AL_ActivityHasRequiredRoute(oNpc, nSlot, nActivity);
     if (bRequiresRoute && AL_GetRouteCount(oNpc, nSlot) <= 0)
     {

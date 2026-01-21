@@ -24,19 +24,19 @@ void main()
 
     SetLocalInt(oExiting, "al_exit_counted", 1);
 
-    int iPlayers = GetLocalInt(oArea, "p") - 1;
+    int iPlayers = GetLocalInt(oArea, "al_player_count") - 1;
     if (iPlayers < 0)
     {
         iPlayers = 0;
     }
 
-    SetLocalInt(oArea, "p", iPlayers);
+    SetLocalInt(oArea, "al_player_count", iPlayers);
 
     if (iPlayers != 0)
     {
         return;
     }
 
-    SetLocalInt(oArea, "t", GetLocalInt(oArea, "t") + 1);
+    SetLocalInt(oArea, "al_tick_token", GetLocalInt(oArea, "al_tick_token") + 1);
     AL_HideRegisteredNPCs(oArea);
 }

@@ -111,12 +111,12 @@ int AL_ComputeTimeSlot()
 
 void AreaTick(object oArea, int nToken)
 {
-    if (GetLocalInt(oArea, "p") <= 0)
+    if (GetLocalInt(oArea, "al_player_count") <= 0)
     {
         return;
     }
 
-    if (nToken != GetLocalInt(oArea, "t"))
+    if (nToken != GetLocalInt(oArea, "al_tick_token"))
     {
         return;
     }
@@ -133,7 +133,7 @@ void AreaTick(object oArea, int nToken)
 
     int iSlot = AL_ComputeTimeSlot();
 
-    if (iSlot == GetLocalInt(oArea, "s"))
+    if (iSlot == GetLocalInt(oArea, "al_slot"))
     {
         DelayCommand(AL_TICK_PERIOD, AreaTick(oArea, nToken));
         return;
@@ -143,7 +143,7 @@ void AreaTick(object oArea, int nToken)
     {
         AL_SyncAreaNPCRegistry(oArea);
     }
-    SetLocalInt(oArea, "s", iSlot);
+    SetLocalInt(oArea, "al_slot", iSlot);
     AL_BroadcastUserEvent(oArea, AL_EVT_SLOT_BASE + iSlot);
     DelayCommand(AL_TICK_PERIOD, AreaTick(oArea, nToken));
 }

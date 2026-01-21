@@ -3,5 +3,5 @@
 void main()
 {
     object oArea = OBJECT_SELF;
-    AreaTick(oArea, GetLocalInt(oArea, "t"));
+    AreaTick(oArea, GetLocalInt(oArea, "al_tick_token"));
 }

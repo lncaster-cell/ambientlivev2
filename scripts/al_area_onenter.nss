@@ -50,18 +50,18 @@ void main()
 
     DeleteLocalInt(oEntering, "al_exit_counted");
 
-    int iPlayers = GetLocalInt(oArea, "p") + 1;
-    SetLocalInt(oArea, "p", iPlayers);
+    int iPlayers = GetLocalInt(oArea, "al_player_count") + 1;
+    SetLocalInt(oArea, "al_player_count", iPlayers);
 
     if (iPlayers != 1)
     {
         return;
     }
 
-    int iToken = GetLocalInt(oArea, "t") + 1;
-    SetLocalInt(oArea, "t", iToken);
+    int iToken = GetLocalInt(oArea, "al_tick_token") + 1;
+    SetLocalInt(oArea, "al_tick_token", iToken);
 
-    SetLocalInt(oArea, "s", AL_ComputeTimeSlot());
+    SetLocalInt(oArea, "al_slot", AL_ComputeTimeSlot());
 
     AL_CacheAreaRoutes(oArea);
     AL_CacheTrainingPartners(oArea);

@@ -32,7 +32,7 @@ int AL_GetRoleActivity(int nRole)
         case AL_ROLE_TRAINER: return AL_ACT_NPC_TRAINER_PACE;
         case AL_ROLE_THIEF: return AL_ACT_NPC_THIEF;
         case AL_ROLE_MERCHANT: return AL_ACT_NPC_MERCHANT_MULTI;
-        case AL_ROLE_GUARD: return AL_ACT_NPC_STAND_CHAT;
+        case AL_ROLE_GUARD: return AL_ACT_NPC_GUARD;
         case AL_ROLE_CITIZEN: return AL_ACT_NPC_ACT_ONE;
     }
 

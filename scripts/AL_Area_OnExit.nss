@@ -26,11 +26,6 @@ void AL_SignalRegisteredNPCs(object oArea, int nEvent)
             {
                 object oSwap = GetLocalObject(oArea, "n" + IntToString(iLastIndex));
                 SetLocalObject(oArea, sKey, oSwap);
-
-                if (GetIsObjectValid(oSwap))
-                {
-                    SetLocalInt(oSwap, "l", i);
-                }
             }
 
             DeleteLocalObject(oArea, "n" + IntToString(iLastIndex));

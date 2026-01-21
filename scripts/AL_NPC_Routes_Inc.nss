@@ -89,11 +89,13 @@ void AL_QueueRoute(object oNpc, int nSlot, int bClearActions)
     {
         DeleteLocalInt(oNpc, "r_slot");
         DeleteLocalInt(oNpc, "r_idx");
+        SetLocalInt(oNpc, "r_active", FALSE);
         return;
     }
 
     SetLocalInt(oNpc, "r_slot", nSlot);
     SetLocalInt(oNpc, "r_idx", 0);
+    SetLocalInt(oNpc, "r_active", TRUE);
 
     while (i < iCount)
     {

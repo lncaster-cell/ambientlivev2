@@ -122,9 +122,9 @@ void AL_PlayNumericAnimation(int nAnimation)
 // - Routes for pacing/WWP use locals r<slot>_n / r<slot>_<idx> (see AL_NPC_Routes_Inc).
 // - Training partners are set via local object "al_training_partner" on the NPC.
 // - Bar pair NPCs are set via local object "al_bar_pair" on the NPC.
-int AL_ActivityHasRequiredRoute(object oNpc, int nSlot, int nActivity)
+int AL_ActivityHasRequiredRoute(object oNpc, int nSlot, string sWaypointTag)
 {
-    if (AL_GetActivityWaypointTag(nActivity) == "")
+    if (sWaypointTag == "")
     {
         return TRUE;
     }
@@ -156,9 +156,13 @@ void AL_ApplyActivityForSlot(object oNpc, int nSlot)
         return;
     }
 
-    if (!AL_ActivityHasRequiredRoute(oNpc, nSlot, nActivity)
-        || (AL_ActivityRequiresTrainingPartner(nActivity) && !AL_ActivityHasTrainingPartner(oNpc))
-        || (AL_ActivityRequiresBarPair(nActivity) && !AL_ActivityHasBarPair(oNpc)))
+    string sWaypointTag = AL_GetActivityWaypointTag(nActivity);
+    int bNeedsTrainingPartner = AL_ActivityRequiresTrainingPartner(nActivity);
+    int bNeedsBarPair = AL_ActivityRequiresBarPair(nActivity);
+
+    if (!AL_ActivityHasRequiredRoute(oNpc, nSlot, sWaypointTag)
+        || (bNeedsTrainingPartner && !AL_ActivityHasTrainingPartner(oNpc))
+        || (bNeedsBarPair && !AL_ActivityHasBarPair(oNpc)))
     {
         nActivity = AL_ACT_NPC_ACT_ONE;
     }

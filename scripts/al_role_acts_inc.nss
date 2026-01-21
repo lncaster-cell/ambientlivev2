@@ -54,9 +54,30 @@ void AL_SetRoleActivitySlots(object oNpc, int nActivity)
     }
 }
 
+int AL_HasCustomActivitySlots(object oNpc)
+{
+    int iSlot = 0;
+
+    while (iSlot <= AL_SLOT_MAX)
+    {
+        if (GetLocalInt(oNpc, "a" + IntToString(iSlot)) > 0)
+        {
+            return TRUE;
+        }
+        iSlot++;
+    }
+
+    return FALSE;
+}
+
 void AL_ApplyRoleActivities(object oNpc)
 {
     if (GetLocalInt(oNpc, AL_ROLE_APPLIED_LOCAL) == 1)
+    {
+        return;
+    }
+
+    if (AL_HasCustomActivitySlots(oNpc))
     {
         return;
     }

@@ -54,10 +54,11 @@ void main()
         int iPlayers = GetLocalInt(oArea, "p") + 1;
         SetLocalInt(oArea, "p", iPlayers);
 
-        if (iPlayers == 1 && GetLocalInt(oArea, "t") == 0)
+        if (iPlayers == 1)
         {
-            SetLocalInt(oArea, "t", 1);
-            DelayCommand(45.0, ExecuteScript("AL_Area_Tick", oArea));
+            int iToken = GetLocalInt(oArea, "t") + 1;
+            SetLocalInt(oArea, "t", iToken);
+            ExecuteScript("AL_Area_Tick", oArea);
         }
 
         AL_SignalRegisteredNPCs(oArea, AL_EVENT_AREA_ENTER);

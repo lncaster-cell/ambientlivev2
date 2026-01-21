@@ -24,6 +24,10 @@ void main()
     {
         nSlot = GetLocalInt(oNpc, "r_slot");
     }
+    else if (nEvent == AL_EVT_ROUTE_REPEAT)
+    {
+        nSlot = GetLocalInt(oNpc, "r_slot");
+    }
     else
     {
         return;

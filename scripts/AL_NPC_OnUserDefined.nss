@@ -64,8 +64,11 @@ void main()
     int bRequiresRoute = AL_ActivityHasRequiredRoute(oNpc, nSlot, nActivity);
     if (bRequiresRoute && AL_GetRouteCount(oNpc, nSlot) <= 0)
     {
-        AL_ClearActiveRoute(oNpc, nEvent != AL_EVT_ROUTE_REPEAT);
         bRequiresRoute = FALSE;
+    }
+    if (!bRequiresRoute && nEvent != AL_EVT_ROUTE_REPEAT)
+    {
+        AL_ClearActiveRoute(oNpc, /*bClearActions=*/ TRUE);
     }
 
     if (bRequiresRoute)

@@ -38,8 +38,20 @@ void main()
     AL_RegisterNPC(oNpc);
 
     object oArea = GetArea(oNpc);
-    if (GetIsObjectValid(oArea) && GetLocalInt(oArea, "p") <= 0)
+    if (GetIsObjectValid(oArea))
     {
-        SetScriptHidden(oNpc, TRUE, TRUE);
+        int iSlotCount = GetLocalInt(oArea, "p");
+        if (iSlotCount > 0)
+        {
+            if (GetScriptHidden(oNpc))
+            {
+                SetScriptHidden(oNpc, FALSE, TRUE);
+            }
+            SignalEvent(oNpc, EventUserDefined(3006));
+        }
+        else
+        {
+            SetScriptHidden(oNpc, TRUE, TRUE);
+        }
     }
 }

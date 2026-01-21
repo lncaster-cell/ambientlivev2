@@ -104,6 +104,27 @@ int AL_ActivityHasRequiredRoute(object oNpc, int nSlot, int nActivity)
     return AL_GetRouteCount(oNpc, nSlot) > 0;
 }
 
+void AL_RefreshRouteForSlot(object oNpc, int nSlot)
+{
+    if (nSlot < 0 || nSlot > AL_SLOT_MAX)
+    {
+        return;
+    }
+
+    int nActivity = AL_GetActivityForSlot(oNpc, nSlot);
+    string sWaypointTag = AL_GetActivityWaypointTag(nActivity);
+
+    if (sWaypointTag == "")
+    {
+        return;
+    }
+
+    if (AL_GetRouteCount(oNpc, nSlot) <= 0)
+    {
+        AL_CacheRouteFromTag(oNpc, nSlot, sWaypointTag);
+    }
+}
+
 int AL_ActivityHasTrainingPartner(object oNpc)
 {
     return GetIsObjectValid(GetLocalObject(oNpc, "al_training_partner"));

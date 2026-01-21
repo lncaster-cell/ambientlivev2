@@ -95,18 +95,13 @@ void AL_PlayNumericAnimation(int nAnimation)
 // - Bar pair NPCs are set via local object "al_bar_pair" on the NPC.
 int AL_ActivityHasRequiredRoute(object oNpc, int nSlot, int nActivity)
 {
-    if (AL_GetRouteCount(oNpc, nSlot) > 0)
+    string sWaypointTag = AL_GetActivityWaypointTag(nActivity);
+    if (sWaypointTag == "")
     {
         return TRUE;
     }
 
-    string sWaypointTag = AL_GetActivityWaypointTag(nActivity);
-    if (sWaypointTag == "")
-    {
-        return FALSE;
-    }
-
-    return TRUE;
+    return AL_GetRouteCount(oNpc, nSlot) > 0;
 }
 
 void AL_RefreshRouteForSlot(object oNpc, int nSlot)

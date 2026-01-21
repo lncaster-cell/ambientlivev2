@@ -32,17 +32,26 @@ void AL_RegisterNPC(object oNpc)
         return;
     }
 
+    int iCount = GetLocalInt(oArea, "n");
     int iIndex = 0;
-    while (iIndex < AL_MAX_NPCS)
+
+    while (iIndex < iCount)
     {
-        if (GetLocalObject(oArea, "n" + IntToString(iIndex)) == oNpc)
+        object oEntry = GetLocalObject(oArea, "n" + IntToString(iIndex));
+
+        if (!GetIsObjectValid(oEntry))
+        {
+            iCount = AL_PruneRegistrySlot(oArea, iIndex, iCount);
+            continue;
+        }
+
+        if (oEntry == oNpc)
         {
             return;
         }
+
         iIndex++;
     }
-
-    int iCount = GetLocalInt(oArea, "n");
 
     if (iCount >= AL_MAX_NPCS)
     {

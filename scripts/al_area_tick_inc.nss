@@ -9,16 +9,6 @@ const int AL_SYNC_TICK_INTERVAL = 4;
 
 int AL_IsRelevantRouteTag(string sTag)
 {
-    if (sTag == "AL_WP_PACE")
-    {
-        return TRUE;
-    }
-
-    if (sTag == "AL_WP_WWP")
-    {
-        return TRUE;
-    }
-
     if (sTag == "AL_WP_S0" || sTag == "AL_WP_S1" || sTag == "AL_WP_S2")
     {
         return TRUE;
@@ -57,6 +47,15 @@ void AL_CacheAreaRoutes(object oArea)
                 int iCount = GetLocalInt(oArea, sAreaPrefix + "n");
                 string sIndex = sAreaPrefix + IntToString(iCount);
                 SetLocalLocation(oArea, sIndex, GetLocation(oObj));
+                int nActivity = GetLocalInt(oObj, "al_activity");
+                if (nActivity > 0)
+                {
+                    SetLocalInt(oArea, sIndex + "_activity", nActivity);
+                }
+                else
+                {
+                    DeleteLocalInt(oArea, sIndex + "_activity");
+                }
 
                 DeleteLocalLocation(oArea, sIndex + "_jump");
                 // Transition setup is pre-seeded via toolset/bootstrap:

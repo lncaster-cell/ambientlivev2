@@ -213,9 +213,7 @@ void AL_ApplyActivityForSlot(object oNpc, int nSlot)
     string sCustom = bLocateWrapper
         ? AL_GetLocateWrapperCustomAnims(nActivity)
         : AL_GetActivityCustomAnims(nActivity);
-    string sNumeric = bLocateWrapper
-        ? AL_GetLocateWrapperNumericAnims(nActivity)
-        : AL_GetActivityNumericAnims(nActivity);
+    string sNumeric = AL_GetActivityNumericAnims(nActivity);
 
     if (sCustom != "")
     {

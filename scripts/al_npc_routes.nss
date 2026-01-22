@@ -177,6 +177,7 @@ void AL_HandleRouteAreaTransition()
             {
                 AL_ClearActiveRoute(oNpc, TRUE);
             }
+            AL_RegisterNPC(oNpc);
             return;
         }
 

@@ -312,13 +312,10 @@ OnExit или OnClientLeave:
 | 31 | Midnight90 | laydownB, proneB | — | — |
 | 32 | Sleep90 | laydownB, proneB | — | — |
 | 33 | Thief | chuckle, getground, gettable, openlock | — | — |
-| 34 | Hide | — | — | — |
-| 35 | Seek | — | — | — |
 | 36 | Thief2 | disableground, sleightofhand, sneak | — | — |
 | 37 | Assassin | sneak | — | — |
 | 38 | MerchantMulti | bored, getground, gettable, openlock, sleightofhand, yawn | — | — |
 | 39 | KneelTalk | kneelidle, kneeltalk | — | — |
-| 40 | LightKeeper | — | — | — |
 | 41 | Barmaid | — | — | требует барную пару |
 | 42 | Bartender | gettable, lookright, openlock, yawn | — | — |
 | 43 | Guard | bored, lookleft, lookright, sigh | — | — |

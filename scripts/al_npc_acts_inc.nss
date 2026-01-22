@@ -6,56 +6,9 @@
 
 int AL_GetRoutePointActivity(object oNpc, int nSlot, int iIndex);
 
-string AL_GetActivitySlotKey(int nSlot)
-{
-    return "a" + IntToString(nSlot);
-}
-
-int AL_GetActivitySlotInt(object oNpc, int nSlot)
-{
-    string sKey = AL_GetActivitySlotKey(nSlot);
-    int nActivity = GetLocalInt(oNpc, sKey);
-    if (nActivity != 0)
-    {
-        return nActivity;
-    }
-
-    string sValue = GetLocalString(oNpc, sKey);
-    if (sValue == "")
-    {
-        return 0;
-    }
-
-    int nParsed = StringToInt(sValue);
-    SetLocalInt(oNpc, sKey, nParsed);
-    DeleteLocalString(oNpc, sKey);
-
-    return nParsed;
-}
-
 int AL_GetActivityForSlot(object oNpc, int nSlot)
 {
     return AL_GetWaypointActivityForSlot(oNpc, nSlot);
-}
-
-int AL_GetWaypointActivityForSlot(object oNpc, int nSlot)
-{
-    if (AL_GetRouteCount(oNpc, nSlot) <= 0)
-    {
-        return 0;
-    }
-
-    int nIndex = GetLocalInt(oNpc, "r_idx");
-    if (nIndex < 0)
-    {
-        nIndex = 0;
-    }
-    else if (nIndex >= AL_GetRouteCount(oNpc, nSlot))
-    {
-        nIndex = 0;
-    }
-
-    return AL_GetRoutePointActivity(oNpc, nSlot, nIndex);
 }
 
 int AL_GetWaypointActivityForSlot(object oNpc, int nSlot)

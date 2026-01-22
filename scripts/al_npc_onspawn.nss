@@ -174,7 +174,6 @@ void main()
     SetLocalInt(oNpc, "al_last_slot", -1);
     AL_InitTrainingPartner(oNpc);
     AL_InitBarPair(oNpc);
-    AL_CacheRoutesForAllSlots(oNpc);
 
     AL_RegisterNPC(oNpc);
 

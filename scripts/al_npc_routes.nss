@@ -152,19 +152,6 @@ int AL_CacheRouteFromTag(object oNpc, int nSlot, string sTag)
     return iCount;
 }
 
-void AL_CacheRoutesForAllSlots(object oNpc)
-{
-    int iSlot = 0;
-
-    while (iSlot <= AL_SLOT_MAX)
-    {
-        string sDesiredTag = AL_GetDesiredRouteTag(oNpc, iSlot);
-        AL_CacheRouteFromTag(oNpc, iSlot, sDesiredTag);
-
-        iSlot++;
-    }
-}
-
 void AL_HandleRouteAreaTransition()
 {
     object oNpc = OBJECT_SELF;
@@ -184,7 +171,17 @@ void AL_HandleRouteAreaTransition()
         AL_RegisterNPC(oNpc);
     }
 
-    AL_CacheRoutesForAllSlots(oNpc);
+    int nSlot = GetLocalInt(oNpc, "r_slot");
+    if (nSlot >= 0 && nSlot <= AL_SLOT_MAX)
+    {
+        string sDesiredTag = AL_GetDesiredRouteTag(oNpc, nSlot);
+        string sCurrentTag = AL_GetRouteTag(oNpc, nSlot);
+        if (sCurrentTag != "" && sCurrentTag != sDesiredTag)
+        {
+            AL_ClearRoute(oNpc, nSlot);
+        }
+        AL_CacheRouteFromTag(oNpc, nSlot, sDesiredTag);
+    }
     SignalEvent(oNpc, EventUserDefined(AL_EVT_RESYNC));
 }
 

@@ -168,6 +168,18 @@ void AL_HandleRouteAreaTransition()
     if (GetIsObjectValid(oArea))
     {
         SetLocalObject(oNpc, "al_last_area", oArea);
+        int nPlayerCount = GetLocalInt(oArea, "al_player_count");
+        if (nPlayerCount <= 0)
+        {
+            // Protect zero-activity areas without PCs; activation happens via al_area_onenter.
+            SetScriptHidden(oNpc, TRUE, TRUE);
+            if (GetLocalInt(oNpc, "r_active"))
+            {
+                AL_ClearActiveRoute(oNpc, TRUE);
+            }
+            return;
+        }
+
         AL_RegisterNPC(oNpc);
     }
 

@@ -131,7 +131,7 @@ int AL_ActivityHasRequiredRoute(object oNpc, int nSlot, int nActivity)
         return TRUE;
     }
 
-    return AL_GetRouteCount(oNpc, nSlot) > 0;
+    return AL_GetRouteTag(oNpc, nSlot) == sWaypointTag;
 }
 
 void AL_RefreshRouteForSlot(object oNpc, int nSlot)
@@ -142,11 +142,17 @@ void AL_RefreshRouteForSlot(object oNpc, int nSlot)
     }
 
     string sDesiredTag = AL_GetDesiredRouteTag(oNpc, nSlot);
+    string sCurrentTag = AL_GetRouteTag(oNpc, nSlot);
 
     if (AL_GetRouteCount(oNpc, nSlot) > 0
-        && AL_GetRouteTag(oNpc, nSlot) == sDesiredTag)
+        && sCurrentTag == sDesiredTag)
     {
         return;
+    }
+
+    if (sCurrentTag != "" && sCurrentTag != sDesiredTag)
+    {
+        AL_ClearRoute(oNpc, nSlot);
     }
 
     AL_CacheRouteFromTag(oNpc, nSlot, sDesiredTag);

@@ -283,51 +283,51 @@ OnExit или OnClientLeave:
 > - **Custom**: строки, проигрываются через `PlayCustomAnimation`.
 > - **Numeric**: ID, проигрываются через `ActionPlayAnimation`.
 
-| ID | Activity | Custom animations | Numeric animations | Требования |
-| --- | --- | --- | --- | --- |
-| 0 | Hidden | — | — | скрыт |
-| 1 | ActOne | lookleft, lookright | — | — |
-| 2 | ActTwo | lookleft, lookright | — | — |
-| 3 | Dinner | sitdrink, siteat, sitidle | — | — |
-| 4 | MidnightBed | laydownB, proneB | — | — |
-| 5 | SleepBed | laydownB, proneB | — | — |
-| 6 | Wake | sitdrink, siteat, sitidle | — | — |
-| 7 | Agree | chuckle, flirt, nodyes | — | — |
-| 8 | Angry | intimidate, nodno, talkshout | 10 | — |
-| 9 | Sad | talksad, tired | 9 | — |
-| 10 | Cook | cooking02, disablefront | 35, 36 | — |
-| 11 | DanceFemale | curtsey, dance01 | 27 | — |
-| 12 | DanceMale | bow, dance01, dance02 | — | — |
-| 13 | Drum | bow, playdrum | — | — |
-| 14 | Flute | curtsey, playflute | — | — |
-| 15 | Forge | craft01, dustoff, forge01 | — | — |
-| 16 | Guitar | bow, playguitar | — | — |
-| 17 | Woodsman | *1attack01, kneelidle | — | — |
-| 18 | Meditate | meditate | — | — |
-| 19 | Post | lookleft, lookright | — | — |
-| 20 | Read | sitidle, sitread, sitteat | — | — |
-| 21 | Sit | sitfidget, sitidle, sittalk, sittalk01, sittalk02 | — | — |
-| 22 | SitDinner | sitdrink, siteat, sitidle, sittalk, sittalk01, sittalk02 | — | — |
-| 23 | StandChat | chuckle, lookleft, lookright, nodno, nodyes, shrug, talk01, talk02, talklaugh | — | — |
-| 24 | TrainingOne | lookleft, lookright | — | требует партнёра |
-| 25 | TrainingTwo | lookleft, lookright | — | требует партнёра |
-| 26 | TrainerPace | lookleft, lookright | — | требует маршрут |
-| 27 | WWP | kneelidle, lookleft, lookright | — | требует маршрут |
-| 28 | Cheer | chuckle, clapping, talklaugh, victory | — | — |
-| 29 | CookMulti | cooking01, cooking02, craft01, disablefront, dustoff, forge01, gettable, kneelidle, kneelup, openlock, scratchhead | — | — |
-| 30 | ForgeMulti | craft01, dustoff, forge01, forge02, gettable, kneeldown, kneelidle, kneelup, openlock | — | — |
-| 31 | Midnight90 | laydownB, proneB | — | — |
-| 32 | Sleep90 | laydownB, proneB | — | — |
-| 33 | Thief | chuckle, getground, gettable, openlock | — | — |
-| 36 | Thief2 | disableground, sleightofhand, sneak | — | — |
-| 37 | Assassin | sneak | — | — |
-| 38 | MerchantMulti | bored, getground, gettable, openlock, sleightofhand, yawn | — | — |
-| 39 | KneelTalk | kneelidle, kneeltalk | — | — |
-| 41 | Barmaid | gettable, lookright, openlock, yawn | — | требует барную пару |
-| 42 | Bartender | gettable, lookright, openlock, yawn | — | — |
-| 43 | Guard | bored, lookleft, lookright, sigh | — | — |
-| 91–98 | LocateWrapper | см. `al_acts_inc.nss` | — | — |
-| 200 | reserved | — | — | — |
+| ID | Activity | Анимации | Требования |
+| --- | --- | --- | --- |
+| 0 | Hidden | — | скрыт |
+| 1 | ActOne | Custom: lookleft, lookright | — |
+| 2 | ActTwo | Custom: lookleft, lookright | — |
+| 3 | Dinner | Custom: sitdrink, siteat, sitidle | — |
+| 4 | MidnightBed | Custom: laydownB, proneB | — |
+| 5 | SleepBed | Custom: laydownB, proneB | — |
+| 6 | Wake | Custom: sitdrink, siteat, sitidle | — |
+| 7 | Agree | Custom: chuckle, flirt, nodyes | — |
+| 8 | Angry | Custom: intimidate, nodno, talkshout<br>Numeric: 10 | — |
+| 9 | Sad | Custom: talksad, tired<br>Numeric: 9 | — |
+| 10 | Cook | Custom: cooking02, disablefront<br>Numeric: 35, 36 | — |
+| 11 | DanceFemale | Custom: curtsey, dance01<br>Numeric: 27 | — |
+| 12 | DanceMale | Custom: bow, dance01, dance02 | — |
+| 13 | Drum | Custom: bow, playdrum | — |
+| 14 | Flute | Custom: curtsey, playflute | — |
+| 15 | Forge | Custom: craft01, dustoff, forge01 | — |
+| 16 | Guitar | Custom: bow, playguitar | — |
+| 17 | Woodsman | Custom: *1attack01, kneelidle | — |
+| 18 | Meditate | Custom: meditate | — |
+| 19 | Post | Custom: lookleft, lookright | — |
+| 20 | Read | Custom: sitidle, sitread, sitteat | — |
+| 21 | Sit | Custom: sitfidget, sitidle, sittalk, sittalk01, sittalk02 | — |
+| 22 | SitDinner | Custom: sitdrink, siteat, sitidle, sittalk, sittalk01, sittalk02 | — |
+| 23 | StandChat | Custom: chuckle, lookleft, lookright, nodno, nodyes, shrug, talk01, talk02, talklaugh | — |
+| 24 | TrainingOne | Custom: lookleft, lookright | требует партнёра |
+| 25 | TrainingTwo | Custom: lookleft, lookright | требует партнёра |
+| 26 | TrainerPace | Custom: lookleft, lookright | требует маршрут |
+| 27 | WWP | Custom: kneelidle, lookleft, lookright | требует маршрут |
+| 28 | Cheer | Custom: chuckle, clapping, talklaugh, victory | — |
+| 29 | CookMulti | Custom: cooking01, cooking02, craft01, disablefront, dustoff, forge01, gettable, kneelidle, kneelup, openlock, scratchhead | — |
+| 30 | ForgeMulti | Custom: craft01, dustoff, forge01, forge02, gettable, kneeldown, kneelidle, kneelup, openlock | — |
+| 31 | Midnight90 | Custom: laydownB, proneB | — |
+| 32 | Sleep90 | Custom: laydownB, proneB | — |
+| 33 | Thief | Custom: chuckle, getground, gettable, openlock | — |
+| 36 | Thief2 | Custom: disableground, sleightofhand, sneak | — |
+| 37 | Assassin | Custom: sneak | — |
+| 38 | MerchantMulti | Custom: bored, getground, gettable, openlock, sleightofhand, yawn | — |
+| 39 | KneelTalk | Custom: kneelidle, kneeltalk | — |
+| 41 | Barmaid | Custom: gettable, lookright, openlock, yawn | требует барную пару |
+| 42 | Bartender | Custom: gettable, lookright, openlock, yawn | — |
+| 43 | Guard | Custom: bored, lookleft, lookright, sigh | — |
+| 91–98 | LocateWrapper | см. `al_acts_inc.nss` | — |
+| 200 | reserved | — | — |
 
 ### Требования активностей
 

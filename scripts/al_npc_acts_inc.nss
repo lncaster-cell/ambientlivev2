@@ -4,6 +4,8 @@
 #include "al_constants_inc"
 #include "al_npc_routes"
 
+int AL_GetRoutePointActivity(object oNpc, int nSlot, int iIndex);
+
 string AL_GetActivitySlotKey(int nSlot)
 {
     return "a" + IntToString(nSlot);

@@ -128,7 +128,7 @@ int AL_ActivityHasRequiredRoute(object oNpc, int nSlot, int nActivity)
     string sWaypointTag = AL_GetActivityWaypointTag(nActivity);
     if (sWaypointTag == "")
     {
-        return TRUE;
+        return FALSE;
     }
 
     return AL_GetRouteTag(oNpc, nSlot) == sWaypointTag;

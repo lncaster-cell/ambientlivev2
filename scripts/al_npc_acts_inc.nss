@@ -15,7 +15,29 @@ int AL_GetWaypointActivityForSlot(object oNpc, int nSlot)
 {
     if (AL_GetRouteCount(oNpc, nSlot) <= 0)
     {
-        return 0;
+        string sSlotKey = "al_slot_activity_" + IntToString(nSlot);
+        int nFallbackActivity = GetLocalInt(oNpc, sSlotKey);
+        if (nFallbackActivity <= 0)
+        {
+            nFallbackActivity = GetLocalInt(oNpc, "al_default_activity");
+        }
+
+        object oArea = GetArea(oNpc);
+        if (nFallbackActivity <= 0 && GetIsObjectValid(oArea))
+        {
+            nFallbackActivity = GetLocalInt(oArea, sSlotKey);
+            if (nFallbackActivity <= 0)
+            {
+                nFallbackActivity = GetLocalInt(oArea, "al_default_activity");
+            }
+        }
+
+        if (nFallbackActivity <= 0)
+        {
+            nFallbackActivity = AL_ACT_NPC_ACT_ONE;
+        }
+
+        return nFallbackActivity;
     }
 
     int nIndex = GetLocalInt(oNpc, "r_idx");

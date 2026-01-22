@@ -302,9 +302,9 @@ OnExit или OnClientLeave:
 | 21 | Sit | sitfidget, sitidle, sittalk, sittalk01, sittalk02 | — | — |
 | 22 | SitDinner | sitdrink, siteat, sitidle, sittalk, sittalk01, sittalk02 | — | — |
 | 23 | StandChat | chuckle, lookleft, lookright, nodno, nodyes, shrug, talk01, talk02, talklaugh | — | — |
-| 24 | TrainingOne | — | — | требует партнёра |
-| 25 | TrainingTwo | — | — | требует партнёра |
-| 26 | TrainerPace | — | — | требует маршрут |
+| 24 | TrainingOne | lookleft, lookright | — | требует партнёра |
+| 25 | TrainingTwo | lookleft, lookright | — | требует партнёра |
+| 26 | TrainerPace | lookleft, lookright | — | требует маршрут |
 | 27 | WWP | kneelidle, lookleft, lookright | — | требует маршрут |
 | 28 | Cheer | chuckle, clapping, talklaugh, victory | — | — |
 | 29 | CookMulti | cooking01, cooking02, craft01, disablefront, dustoff, forge01, gettable, kneelidle, kneelup, openlock, scratchhead | — | — |
@@ -316,7 +316,7 @@ OnExit или OnClientLeave:
 | 37 | Assassin | sneak | — | — |
 | 38 | MerchantMulti | bored, getground, gettable, openlock, sleightofhand, yawn | — | — |
 | 39 | KneelTalk | kneelidle, kneeltalk | — | — |
-| 41 | Barmaid | — | — | требует барную пару |
+| 41 | Barmaid | gettable, lookright, openlock, yawn | — | требует барную пару |
 | 42 | Bartender | gettable, lookright, openlock, yawn | — | — |
 | 43 | Guard | bored, lookleft, lookright, sigh | — | — |
 | 91–98 | LocateWrapper | см. `al_acts_inc.nss` | — | — |

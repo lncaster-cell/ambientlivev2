@@ -319,9 +319,9 @@ Locals (SetLocalInt / GetLocalInt) — дешёвый способ хранит�
 | 21 | NpcSit | sitfidget, sitidle, sittalk, sittalk01, sittalk02 | — |
 | 22 | NpcSitDinner | sitdrink, siteat, sitidle, sittalk, sittalk01, sittalk02 | — |
 | 23 | NpcStandChat | chuckle, lookleft, lookright, nodno, nodyes, shrug, talk01, talk02, talklaugh | — |
-| 24 | NpcTrainingOne | — | — |
-| 25 | NpcTrainingTwo | — | — |
-| 26 | NpcTrainerPace | — | — |
+| 24 | NpcTrainingOne | lookleft, lookright | — |
+| 25 | NpcTrainingTwo | lookleft, lookright | — |
+| 26 | NpcTrainerPace | lookleft, lookright | — |
 | 27 | NpcWwp | kneelidle, lookleft, lookright | — |
 | 28 | NpcCheer | chuckle, clapping, talklaugh, victory | — |
 | 29 | NpcCookMulti | cooking01, cooking02, craft01, disablefront, dustoff, forge01, gettable, kneelidle, kneelup, openlock, scratchhead | — |
@@ -336,7 +336,7 @@ Locals (SetLocalInt / GetLocalInt) — дешёвый способ хранит�
 | 38 | NpcMerchantMulti | bored, getground, gettable, openlock, sleightofhand, yawn | — |
 | 39 | NpcKneelTalk | kneelidle, kneeltalk | — |
 | 40 | NpcLightKeeper | — | — |
-| 41 | NpcBarmaid | — | — |
+| 41 | NpcBarmaid | gettable, lookright, openlock, yawn | — |
 | 42 | NpcBartender | gettable, lookright, openlock, yawn | — |
 | 91–98 | LocateWrapper | — | — |
 | 200 | reserved | — | — |

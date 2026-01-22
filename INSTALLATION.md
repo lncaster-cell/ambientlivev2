@@ -99,6 +99,8 @@
 Когда NPC находится на маршруте, значение `al_activity` для текущего waypoint’а
 используется как активность.
 Если `al_activity` не задан, NPC считается скрытым (активность 0).
+Если маршрута нет, активность берётся через `AL_GetWaypointActivityForSlot`:
+сначала `al_slot_activity_<slot>`, затем `al_default_activity` на NPC/области.
 
 ---
 

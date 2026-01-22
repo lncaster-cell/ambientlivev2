@@ -4,6 +4,8 @@
 #include "al_npc_acts_inc"
 #include "al_npc_routes"
 
+void AL_ResetRouteIndex(object oNpc);
+
 int AL_GetAmbientLifeDaySeconds()
 {
     int nSeconds = GetTimeSecond();
@@ -154,8 +156,19 @@ void main()
         SetLocalInt(oNpc, "al_last_slot", -1);
     }
 
+    AL_RefreshRouteForSlot(oNpc, nSlot);
+    if (nEvent != AL_EVT_ROUTE_REPEAT)
+    {
+        AL_ResetRouteIndex(oNpc);
+    }
+
     SetLocalInt(oNpc, "al_last_slot", nSlot);
     int nActivity = AL_GetActivityForSlot(oNpc, nSlot);
+    int nWaypointActivity = AL_GetWaypointActivityForSlot(oNpc, nSlot);
+    if (nWaypointActivity > 0)
+    {
+        nActivity = nWaypointActivity;
+    }
     AL_DebugLog(oNpc, "AL_EVT " + IntToString(nEvent)
         + " slot=" + IntToString(nSlot)
         + " activity=" + IntToString(nActivity));
@@ -164,8 +177,6 @@ void main()
         AL_ClearActiveRoute(oNpc, /*bClearActions=*/ TRUE);
         return;
     }
-
-    AL_RefreshRouteForSlot(oNpc, nSlot);
 
     int bRequiresRoute = AL_ActivityHasRequiredRoute(oNpc, nSlot, nActivity);
     int bSleepActivity = AL_ShouldLoopCustomAnimation(nActivity);

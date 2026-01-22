@@ -104,6 +104,9 @@ string AL_GetActivityCustomAnims(int nActivity)
             return "sitdrink, siteat, sitidle, sittalk, sittalk01, sittalk02";
         case AL_ACT_NPC_STAND_CHAT:
             return "chuckle, lookleft, lookright, shrug, talk01, talk02, talklaugh";
+        case AL_ACT_NPC_TRAINING_ONE: return "lookleft, lookright";
+        case AL_ACT_NPC_TRAINING_TWO: return "lookleft, lookright";
+        case AL_ACT_NPC_TRAINER_PACE: return "lookleft, lookright";
         case AL_ACT_NPC_WWP: return "kneelidle, lookleft, lookright";
         case AL_ACT_NPC_CHEER: return "chuckle, clapping, talklaugh, victory";
         case AL_ACT_NPC_COOK_MULTI:
@@ -118,6 +121,7 @@ string AL_GetActivityCustomAnims(int nActivity)
         case AL_ACT_NPC_MERCHANT_MULTI:
             return "bored, getground, gettable, openlock, sleightofhand, yawn";
         case AL_ACT_NPC_KNEEL_TALK: return "kneelidle, kneeltalk";
+        case AL_ACT_NPC_BARMAID: return "gettable, lookright, openlock, yawn";
         case AL_ACT_NPC_BARTENDER: return "gettable, lookright, openlock, yawn";
         case AL_ACT_NPC_GUARD: return "bored, lookleft, lookright, sigh";
     }

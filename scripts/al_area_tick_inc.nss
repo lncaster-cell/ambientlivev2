@@ -14,9 +14,46 @@ void AL_CacheAreaRoutes(object oArea)
         return;
     }
 
+    // NOTE: Clearing "al_routes_cached" is safe and forces a full rebuild
+    // of the cached route data on the next call.
     if (GetLocalInt(oArea, "al_routes_cached"))
     {
         return;
+    }
+
+    object oResetObj = GetFirstObjectInArea(oArea);
+    int iResetCount = 0;
+    while (GetIsObjectValid(oResetObj))
+    {
+        if (GetObjectType(oResetObj) == OBJECT_TYPE_WAYPOINT)
+        {
+            string sResetTag = GetTag(oResetObj);
+            if (sResetTag != "")
+            {
+                string sResetFlag = "al_route_reset_" + sResetTag;
+                if (!GetLocalInt(oArea, sResetFlag))
+                {
+                    SetLocalInt(oArea, sResetFlag, TRUE);
+                    SetLocalString(oArea, "al_route_reset_tag_" + IntToString(iResetCount), sResetTag);
+                    iResetCount++;
+
+                    string sResetPrefix = "al_route_" + sResetTag + "_";
+                    int iExistingCount = GetLocalInt(oArea, sResetPrefix + "n");
+                    int iResetIndex = 0;
+                    while (iResetIndex < iExistingCount)
+                    {
+                        string sResetIndex = sResetPrefix + IntToString(iResetIndex);
+                        DeleteLocalLocation(oArea, sResetIndex);
+                        DeleteLocalInt(oArea, sResetIndex + "_activity");
+                        DeleteLocalLocation(oArea, sResetIndex + "_jump");
+                        iResetIndex++;
+                    }
+                    DeleteLocalInt(oArea, sResetPrefix + "n");
+                }
+            }
+        }
+
+        oResetObj = GetNextObjectInArea(oArea);
     }
 
     object oObj = GetFirstObjectInArea(oArea);
@@ -73,6 +110,18 @@ void AL_CacheAreaRoutes(object oArea)
         }
 
         oObj = GetNextObjectInArea(oArea);
+    }
+
+    int iResetCleanupIndex = 0;
+    while (iResetCleanupIndex < iResetCount)
+    {
+        string sCleanupTag = GetLocalString(oArea, "al_route_reset_tag_" + IntToString(iResetCleanupIndex));
+        if (sCleanupTag != "")
+        {
+            DeleteLocalInt(oArea, "al_route_reset_" + sCleanupTag);
+        }
+        DeleteLocalString(oArea, "al_route_reset_tag_" + IntToString(iResetCleanupIndex));
+        iResetCleanupIndex++;
     }
 
     SetLocalInt(oArea, "al_routes_cached", TRUE);

@@ -80,7 +80,7 @@ void main()
     }
     else if (nEvent >= AL_EVT_SLOT_0 && nEvent <= AL_EVT_SLOT_5)
     {
-        nSlot = nEvent - AL_EVT_SLOT_BASE;
+        nSlot = nEvent - AL_EVT_SLOT_0;
     }
     else if (nEvent == AL_EVT_ROUTE_REPEAT)
     {

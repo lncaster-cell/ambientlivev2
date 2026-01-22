@@ -133,20 +133,6 @@ void AL_SyncAreaNPCRegistry(object oArea)
     }
 }
 
-void AL_StartNPCRegistryTracking(object oNpc)
-{
-    if (!GetIsObjectValid(oNpc))
-    {
-        return;
-    }
-
-    object oArea = GetArea(oNpc);
-    if (GetIsObjectValid(oArea))
-    {
-        SetLocalObject(oNpc, "al_last_area", oArea);
-    }
-}
-
 void AL_HideRegisteredNPCs(object oArea)
 {
     int iCount = GetLocalInt(oArea, "al_npc_count");

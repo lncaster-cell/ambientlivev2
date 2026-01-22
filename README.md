@@ -143,8 +143,6 @@ slot = floor(GetTimeHour() / 4)  // 0..5
 | `al_last_slot` | int | последний применённый слот |
 | `al_last_area` | object | последняя область NPC |
 | `a0..a5` | int | активность для слотов 0..5 |
-| `al_role` | int | роль NPC (если используется роль) |
-| `al_role_applied` | int | флаг применения роли |
 | `al_training_partner` | object | партнёр для тренировки |
 | `al_bar_pair` | object | барная пара (barmaid/bartender) |
 | `r<slot>_n` | int | количество точек маршрута слота |

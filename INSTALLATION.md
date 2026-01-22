@@ -69,11 +69,8 @@
 
 ## 4) Назначение активностей NPC
 
-Активность задаётся **только** локальным int `al_activity` на waypoint для
-маршрутов. Другие механизмы (роли и слоты `a0..a5`) не используются. Если
-маршрут отсутствует, применяется fallback-логика из
-`AL_GetWaypointActivityForSlot` с локалами `al_slot_activity_<slot>` и
-`al_default_activity` на NPC/области.
+Активность задаётся **только** локальным int `al_activity` на waypoint.
+Другие механизмы (роли) не используются.
 
 ---
 
@@ -102,18 +99,6 @@
 Когда NPC находится на маршруте, значение `al_activity` для текущего waypoint’а
 используется как активность.
 Если `al_activity` не задан, NPC считается скрытым (активность 0).
-Если маршрута нет, активность берётся через `AL_GetWaypointActivityForSlot`:
-сначала `al_slot_activity_<slot>`, затем `al_default_activity` на NPC/области.
-
-### 5.3 Активность, определяемая waypoint
-
-Если нужно, чтобы активность определялась **самим waypoint’ом** (единый источник истины),
-задайте на waypoint локальный int:
-
-* `al_activity` → ID активности (см. `al_acts_inc.nss`)
-
-Когда NPC находится на маршруте, значение `al_activity` для текущего waypoint’а
-переопределяет слот `a0..a5`.
 Если маршрута нет, активность берётся через `AL_GetWaypointActivityForSlot`:
 сначала `al_slot_activity_<slot>`, затем `al_default_activity` на NPC/области.
 

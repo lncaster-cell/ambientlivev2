@@ -6,11 +6,6 @@
 
 int AL_GetRoutePointActivity(object oNpc, int nSlot, int iIndex);
 
-int AL_GetActivityForSlot(object oNpc, int nSlot)
-{
-    return AL_GetWaypointActivityForSlot(oNpc, nSlot);
-}
-
 int AL_GetWaypointActivityForSlot(object oNpc, int nSlot)
 {
     if (AL_GetRouteCount(oNpc, nSlot) <= 0)
@@ -197,7 +192,7 @@ void AL_ApplyActivityForSlot(object oNpc, int nSlot)
         return;
     }
 
-    int nActivity = AL_GetActivityForSlot(oNpc, nSlot);
+    int nActivity = AL_GetWaypointActivityForSlot(oNpc, nSlot);
 
     if (nActivity == AL_ACT_NPC_HIDDEN)
     {

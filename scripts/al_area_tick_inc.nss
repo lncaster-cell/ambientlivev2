@@ -7,6 +7,20 @@
 const float AL_TICK_PERIOD = 45.0;
 const int AL_SYNC_TICK_INTERVAL = 4;
 
+void AL_AreaDebugLog(object oArea, string sMessage)
+{
+    if (!GetIsObjectValid(oArea) || GetLocalInt(oArea, "al_debug") != 1)
+    {
+        return;
+    }
+
+    object oPc = GetFirstPC();
+    if (GetIsObjectValid(oPc))
+    {
+        SendMessageToPC(oPc, sMessage);
+    }
+}
+
 void AL_CacheAreaRoutes(object oArea)
 {
     if (!GetIsObjectValid(oArea))
@@ -65,9 +79,26 @@ void AL_CacheAreaRoutes(object oArea)
             string sTag = GetTag(oObj);
             if (sTag != "")
             {
+                int nIndex = GetLocalInt(oObj, "al_route_index");
+                if (nIndex < 0)
+                {
+                    AL_AreaDebugLog(oArea, "AL: waypoint " + sTag + " missing al_route_index; skipped.");
+                    oObj = GetNextObjectInArea(oArea);
+                    continue;
+                }
+
                 string sAreaPrefix = "al_route_" + sTag + "_";
-                int iCount = GetLocalInt(oArea, sAreaPrefix + "n");
-                string sIndex = sAreaPrefix + IntToString(iCount);
+                string sIndex = sAreaPrefix + IntToString(nIndex);
+                string sIndexMarker = sIndex + "_set";
+                if (GetLocalInt(oArea, sIndexMarker))
+                {
+                    AL_AreaDebugLog(oArea, "AL: duplicate route index " + IntToString(nIndex) + " for tag " + sTag + "; skipped.");
+                    oObj = GetNextObjectInArea(oArea);
+                    continue;
+                }
+                SetLocalInt(oArea, sIndexMarker, TRUE);
+                SetLocalInt(oArea, sAreaPrefix + "count", GetLocalInt(oArea, sAreaPrefix + "count") + 1);
+
                 SetLocalLocation(oArea, sIndex, GetLocation(oObj));
                 int nActivity = GetLocalInt(oObj, "al_activity");
                 if (nActivity > 0)
@@ -104,8 +135,48 @@ void AL_CacheAreaRoutes(object oArea)
                     }
                 }
 
-                iCount++;
-                SetLocalInt(oArea, sAreaPrefix + "n", iCount);
+                string sMaxKey = sAreaPrefix + "max";
+                string sMaxSetKey = sAreaPrefix + "max_set";
+                int nMaxIndex = GetLocalInt(oArea, sMaxKey);
+                if (!GetLocalInt(oArea, sMaxSetKey))
+                {
+                    nMaxIndex = -1;
+                }
+
+                if (nIndex > nMaxIndex)
+                {
+                    nMaxIndex = nIndex;
+                }
+
+                SetLocalInt(oArea, sMaxKey, nMaxIndex);
+                SetLocalInt(oArea, sMaxSetKey, TRUE);
+                SetLocalInt(oArea, sAreaPrefix + "n", nMaxIndex + 1);
+            }
+        }
+
+        oObj = GetNextObjectInArea(oArea);
+    }
+
+    oObj = GetFirstObjectInArea(oArea);
+    while (GetIsObjectValid(oObj))
+    {
+        if (GetObjectType(oObj) == OBJECT_TYPE_WAYPOINT)
+        {
+            string sTag = GetTag(oObj);
+            if (sTag != "")
+            {
+                string sAreaPrefix = "al_route_" + sTag + "_";
+                string sGapLoggedKey = sAreaPrefix + "gap_logged";
+                if (!GetLocalInt(oArea, sGapLoggedKey))
+                {
+                    int nCount = GetLocalInt(oArea, sAreaPrefix + "count");
+                    int nMaxIndex = GetLocalInt(oArea, sAreaPrefix + "max");
+                    if (nCount > 0 && nCount != (nMaxIndex + 1))
+                    {
+                        AL_AreaDebugLog(oArea, "AL: route tag " + sTag + " has gaps in al_route_index; missing indices will be empty.");
+                    }
+                    SetLocalInt(oArea, sGapLoggedKey, TRUE);
+                }
             }
         }
 

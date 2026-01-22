@@ -35,13 +35,27 @@ int AL_GetActivitySlotInt(object oNpc, int nSlot)
 
 int AL_GetActivityForSlot(object oNpc, int nSlot)
 {
-    int nActivity = AL_GetActivitySlotInt(oNpc, nSlot);
-    if (nActivity > 0 || nSlot == 0)
+    return AL_GetWaypointActivityForSlot(oNpc, nSlot);
+}
+
+int AL_GetWaypointActivityForSlot(object oNpc, int nSlot)
+{
+    if (AL_GetRouteCount(oNpc, nSlot) <= 0)
     {
-        return nActivity;
+        return 0;
     }
 
-    return AL_GetActivitySlotInt(oNpc, 0);
+    int nIndex = GetLocalInt(oNpc, "r_idx");
+    if (nIndex < 0)
+    {
+        nIndex = 0;
+    }
+    else if (nIndex >= AL_GetRouteCount(oNpc, nSlot))
+    {
+        nIndex = 0;
+    }
+
+    return AL_GetRoutePointActivity(oNpc, nSlot, nIndex);
 }
 
 int AL_GetWaypointActivityForSlot(object oNpc, int nSlot)
@@ -174,8 +188,7 @@ void AL_RefreshRouteForSlot(object oNpc, int nSlot)
         return;
     }
 
-    int nActivity = AL_GetActivityForSlot(oNpc, nSlot);
-    string sDesiredTag = AL_GetDesiredRouteTag(nSlot, nActivity);
+    string sDesiredTag = AL_GetDesiredRouteTag(nSlot);
 
     if (AL_GetRouteCount(oNpc, nSlot) > 0
         && AL_GetRouteTag(oNpc, nSlot) == sDesiredTag)

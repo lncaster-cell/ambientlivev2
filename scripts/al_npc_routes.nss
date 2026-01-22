@@ -6,7 +6,6 @@
 //   r_slot         (int)    active slot
 //   r_idx          (int)    active index (optional)
 
-#include "al_acts_inc"
 #include "al_constants_inc"
 #include "al_npc_reg_inc"
 
@@ -25,14 +24,8 @@ string AL_GetRouteTag(object oNpc, int nSlot)
     return GetLocalString(oNpc, AL_GetRouteTagKey(nSlot));
 }
 
-string AL_GetDesiredRouteTag(int nSlot, int nActivity)
+string AL_GetDesiredRouteTag(int nSlot)
 {
-    string sWaypointTag = AL_GetActivityWaypointTag(nActivity);
-    if (sWaypointTag != "")
-    {
-        return sWaypointTag;
-    }
-
     return "AL_WP_S" + IntToString(nSlot);
 }
 
@@ -148,8 +141,7 @@ void AL_CacheRoutesForAllSlots(object oNpc)
 
     while (iSlot <= AL_SLOT_MAX)
     {
-        int nActivity = GetLocalInt(oNpc, "a" + IntToString(iSlot));
-        string sDesiredTag = AL_GetDesiredRouteTag(iSlot, nActivity);
+        string sDesiredTag = AL_GetDesiredRouteTag(iSlot);
         AL_CacheRouteFromTag(oNpc, iSlot, sDesiredTag);
 
         iSlot++;

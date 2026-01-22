@@ -9,16 +9,6 @@ const int AL_SYNC_TICK_INTERVAL = 4;
 
 int AL_IsRelevantRouteTag(string sTag)
 {
-    if (sTag == "AL_WP_PACE")
-    {
-        return TRUE;
-    }
-
-    if (sTag == "AL_WP_WWP")
-    {
-        return TRUE;
-    }
-
     if (sTag == "AL_WP_S0" || sTag == "AL_WP_S1" || sTag == "AL_WP_S2")
     {
         return TRUE;

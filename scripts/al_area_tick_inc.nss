@@ -7,21 +7,6 @@
 const float AL_TICK_PERIOD = 45.0;
 const int AL_SYNC_TICK_INTERVAL = 4;
 
-int AL_IsRelevantRouteTag(string sTag)
-{
-    if (sTag == "AL_WP_S0" || sTag == "AL_WP_S1" || sTag == "AL_WP_S2")
-    {
-        return TRUE;
-    }
-
-    if (sTag == "AL_WP_S3" || sTag == "AL_WP_S4" || sTag == "AL_WP_S5")
-    {
-        return TRUE;
-    }
-
-    return FALSE;
-}
-
 void AL_CacheAreaRoutes(object oArea)
 {
     if (!GetIsObjectValid(oArea))
@@ -41,7 +26,7 @@ void AL_CacheAreaRoutes(object oArea)
         if (GetObjectType(oObj) == OBJECT_TYPE_WAYPOINT)
         {
             string sTag = GetTag(oObj);
-            if (AL_IsRelevantRouteTag(sTag))
+            if (sTag != "")
             {
                 string sAreaPrefix = "al_route_" + sTag + "_";
                 int iCount = GetLocalInt(oArea, sAreaPrefix + "n");

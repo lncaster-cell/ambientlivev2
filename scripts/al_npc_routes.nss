@@ -24,9 +24,26 @@ string AL_GetRouteTag(object oNpc, int nSlot)
     return GetLocalString(oNpc, AL_GetRouteTagKey(nSlot));
 }
 
-string AL_GetDesiredRouteTag(int nSlot)
+string AL_GetDesiredRouteKey(int nSlot)
+{
+    return "alwp" + IntToString(nSlot);
+}
+
+string AL_GetDefaultRouteTag(int nSlot)
 {
     return "AL_WP_S" + IntToString(nSlot);
+}
+
+string AL_GetDesiredRouteTag(object oNpc, int nSlot)
+{
+    string sKey = AL_GetDesiredRouteKey(nSlot);
+    string sTag = GetLocalString(oNpc, sKey);
+    if (sTag != "")
+    {
+        return sTag;
+    }
+
+    return AL_GetDefaultRouteTag(nSlot);
 }
 
 int AL_GetRouteCount(object oNpc, int nSlot)
@@ -141,7 +158,7 @@ void AL_CacheRoutesForAllSlots(object oNpc)
 
     while (iSlot <= AL_SLOT_MAX)
     {
-        string sDesiredTag = AL_GetDesiredRouteTag(iSlot);
+        string sDesiredTag = AL_GetDesiredRouteTag(oNpc, iSlot);
         AL_CacheRouteFromTag(oNpc, iSlot, sDesiredTag);
 
         iSlot++;

@@ -90,10 +90,14 @@ string AL_SelectRandomToken(string sList)
         if (i == iLen || GetSubString(sList, i, 1) == ",")
         {
             string sToken = AL_TrimToken(GetSubString(sList, iStart, i - iStart));
-            iToken++;
-            if (Random(iToken) == 0)
+            // Allow "dirty" lists with extra commas by skipping empty tokens.
+            if (sToken != "")
             {
-                sSelected = sToken;
+                iToken++;
+                if (Random(iToken) == 0)
+                {
+                    sSelected = sToken;
+                }
             }
             iStart = i + 1;
         }

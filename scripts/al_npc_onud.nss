@@ -15,6 +15,11 @@ int AL_GetAmbientLifeDaySeconds()
     return nSeconds + (nMinutes * 60) + (nHours * 3600);
 }
 
+void AL_ResetRouteIndex(object oNpc)
+{
+    SetLocalInt(oNpc, "r_idx", 0);
+}
+
 int AL_GetRepeatAnimIntervalSeconds()
 {
     return 15 + Random(16);

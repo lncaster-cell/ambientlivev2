@@ -51,11 +51,6 @@ int AL_GetRoutePointActivity(object oNpc, int nSlot, int iIndex)
     return GetLocalInt(oNpc, AL_GetRoutePrefix(nSlot) + IntToString(iIndex) + "_activity");
 }
 
-void AL_ResetRouteIndex(object oNpc)
-{
-    SetLocalInt(oNpc, "r_idx", 0);
-}
-
 void AL_UpdateRouteIndex(object oNpc, int iIndex)
 {
     SetLocalInt(oNpc, "r_idx", iIndex);

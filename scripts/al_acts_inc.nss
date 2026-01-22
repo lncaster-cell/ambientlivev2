@@ -46,7 +46,6 @@ const int AL_ACT_NPC_BARTENDER = 42;
 const int AL_ACT_NPC_GUARD = 43;
 const int AL_ACT_LOCATE_WRAPPER_MIN = 91;
 const int AL_ACT_LOCATE_WRAPPER_MAX = 98;
-const int AL_ACT_RESERVED = 200;
 
 int AL_IsLocateWrapperActivity(int nActivity)
 {
@@ -67,11 +66,6 @@ string AL_GetLocateWrapperCustomAnims(int nActivity)
         case 98: return "disableground, sleightofhand, sneak";
     }
 
-    return "";
-}
-
-string AL_GetLocateWrapperNumericAnims(int nActivity)
-{
     return "";
 }
 

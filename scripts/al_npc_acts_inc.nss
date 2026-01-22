@@ -188,7 +188,7 @@ void AL_RefreshRouteForSlot(object oNpc, int nSlot)
         return;
     }
 
-    string sDesiredTag = AL_GetDesiredRouteTag(nSlot);
+    string sDesiredTag = AL_GetDesiredRouteTag(oNpc, nSlot);
 
     if (AL_GetRouteCount(oNpc, nSlot) > 0
         && AL_GetRouteTag(oNpc, nSlot) == sDesiredTag)

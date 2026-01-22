@@ -5,6 +5,7 @@
 #include "al_npc_routes"
 
 void AL_ResetRouteIndex(object oNpc);
+int AL_ActivityUsesRoute(int nActivity);
 
 int AL_GetAmbientLifeDaySeconds()
 {
@@ -18,6 +19,11 @@ int AL_GetAmbientLifeDaySeconds()
 void AL_ResetRouteIndex(object oNpc)
 {
     SetLocalInt(oNpc, "r_idx", 0);
+}
+
+int AL_ActivityUsesRoute(int nActivity)
+{
+    return AL_GetActivityWaypointTag(nActivity) != "";
 }
 
 int AL_GetRepeatAnimIntervalSeconds()
@@ -127,6 +133,7 @@ void main()
 
     SetLocalInt(oNpc, "al_last_slot", nSlot);
     int nActivity = AL_GetWaypointActivityForSlot(oNpc, nSlot);
+    int bUsesRoute = AL_ActivityUsesRoute(nActivity);
     AL_DebugLog(oNpc, "AL_EVT " + IntToString(nEvent)
         + " slot=" + IntToString(nSlot)
         + " activity=" + IntToString(nActivity));
@@ -135,15 +142,25 @@ void main()
         AL_ClearActiveRoute(oNpc, /*bClearActions=*/ TRUE);
         return;
     }
+    if (nEvent == AL_EVT_ROUTE_REPEAT && !bUsesRoute)
+    {
+        AL_ClearActiveRoute(oNpc, /*bClearActions=*/ TRUE);
+        return;
+    }
 
-    int bRequiresRoute = AL_ActivityHasRequiredRoute(oNpc, nSlot, nActivity);
+    int bRequiresRoute = bUsesRoute && AL_ActivityHasRequiredRoute(oNpc, nSlot, nActivity);
     int bSleepActivity = AL_ShouldLoopCustomAnimation(nActivity);
+    if (!bUsesRoute)
+    {
+        AL_ClearActiveRoute(oNpc, /*bClearActions=*/ TRUE);
+    }
     if (bRequiresRoute && AL_GetRouteCount(oNpc, nSlot) <= 0)
     {
         bRequiresRoute = FALSE;
     }
     AL_DebugLog(oNpc, "routeCount=" + IntToString(AL_GetRouteCount(oNpc, nSlot))
         + " requiresRoute=" + IntToString(bRequiresRoute)
+        + " usesRoute=" + IntToString(bUsesRoute)
         + " sleep=" + IntToString(bSleepActivity));
     if (!bRequiresRoute && nEvent != AL_EVT_ROUTE_REPEAT)
     {

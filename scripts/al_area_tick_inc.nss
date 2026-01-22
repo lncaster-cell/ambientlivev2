@@ -128,6 +128,6 @@ void AreaTick(object oArea, int nToken)
         AL_SyncAreaNPCRegistry(oArea);
     }
     SetLocalInt(oArea, "al_slot", iSlot);
-    AL_BroadcastUserEvent(oArea, AL_EVT_SLOT_BASE + iSlot);
+    AL_BroadcastUserEvent(oArea, AL_EVT_SLOT_0 + iSlot);
     DelayCommand(AL_TICK_PERIOD, AreaTick(oArea, nToken));
 }

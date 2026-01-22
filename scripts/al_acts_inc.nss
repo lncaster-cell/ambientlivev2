@@ -51,10 +51,6 @@ const int AL_ACT_LOCATE_WRAPPER_MIN = 91;
 const int AL_ACT_LOCATE_WRAPPER_MAX = 98;
 const int AL_ACT_RESERVED = 200;
 
-// Helper animation names used by shared helpers.
-const string AL_HELPER_ANIM_SITUP = "situp";
-const string AL_HELPER_ANIM_IDLE = "idle";
-
 int AL_IsLocateWrapperActivity(int nActivity)
 {
     return nActivity >= AL_ACT_LOCATE_WRAPPER_MIN && nActivity <= AL_ACT_LOCATE_WRAPPER_MAX;

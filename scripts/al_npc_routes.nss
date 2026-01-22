@@ -46,6 +46,16 @@ location AL_GetRoutePoint(object oNpc, int nSlot, int iIndex)
     return GetLocalLocation(oNpc, AL_GetRoutePrefix(nSlot) + IntToString(iIndex));
 }
 
+int AL_GetRoutePointActivity(object oNpc, int nSlot, int iIndex)
+{
+    return GetLocalInt(oNpc, AL_GetRoutePrefix(nSlot) + IntToString(iIndex) + "_activity");
+}
+
+void AL_UpdateRouteIndex(object oNpc, int iIndex)
+{
+    SetLocalInt(oNpc, "r_idx", iIndex);
+}
+
 void AL_ClearActiveRoute(object oNpc, int bClearActions)
 {
     if (bClearActions)
@@ -69,6 +79,7 @@ void AL_ClearRoute(object oNpc, int nSlot)
         string sIndex = sPrefix + IntToString(i);
         DeleteLocalLocation(oNpc, sIndex);
         DeleteLocalLocation(oNpc, sIndex + "_jump");
+        DeleteLocalInt(oNpc, sIndex + "_activity");
         i++;
     }
 
@@ -101,6 +112,15 @@ int AL_CacheRouteFromTag(object oNpc, int nSlot, string sTag)
         string sIndex = sPrefix + IntToString(i);
         string sAreaIndex = sAreaPrefix + IntToString(i);
         SetLocalLocation(oNpc, sIndex, GetLocalLocation(oArea, sAreaIndex));
+        int nActivity = GetLocalInt(oArea, sAreaIndex + "_activity");
+        if (nActivity > 0)
+        {
+            SetLocalInt(oNpc, sIndex + "_activity", nActivity);
+        }
+        else
+        {
+            DeleteLocalInt(oNpc, sIndex + "_activity");
+        }
 
         DeleteLocalLocation(oNpc, sIndex + "_jump");
         location lJump = GetLocalLocation(oArea, sAreaIndex + "_jump");
@@ -185,6 +205,7 @@ void AL_QueueRoute(object oNpc, int nSlot, int bClearActions)
         string sIndex = AL_GetRoutePrefix(nSlot) + IntToString(i);
         location lPoint = AL_GetRoutePoint(oNpc, nSlot, i);
         AssignCommand(oNpc, ActionMoveToLocation(lPoint));
+        AssignCommand(oNpc, ActionDoCommand(AL_UpdateRouteIndex(oNpc, i)));
         location lJump = GetLocalLocation(oNpc, sIndex + "_jump");
         object oJumpArea = GetAreaFromLocation(lJump);
         if (GetIsObjectValid(oJumpArea))

@@ -63,6 +63,10 @@ void AL_CacheAreaRoutes(object oArea)
                         iResetIndex++;
                     }
                     DeleteLocalInt(oArea, sResetPrefix + "n");
+                    DeleteLocalInt(oArea, sResetPrefix + "count");
+                    DeleteLocalInt(oArea, sResetPrefix + "max");
+                    DeleteLocalInt(oArea, sResetPrefix + "max_set");
+                    DeleteLocalInt(oArea, sResetPrefix + "gap_logged");
                 }
             }
         }
@@ -88,6 +92,12 @@ void AL_CacheAreaRoutes(object oArea)
                 }
 
                 string sAreaPrefix = "al_route_" + sTag + "_";
+                string sCountResetKey = sAreaPrefix + "count_reset";
+                if (!GetLocalInt(oArea, sCountResetKey))
+                {
+                    SetLocalInt(oArea, sAreaPrefix + "count", 0);
+                    SetLocalInt(oArea, sCountResetKey, TRUE);
+                }
                 string sIndex = sAreaPrefix + IntToString(nIndex);
                 string sIndexMarker = sIndex + "_set";
                 if (GetLocalInt(oArea, sIndexMarker))
@@ -177,6 +187,7 @@ void AL_CacheAreaRoutes(object oArea)
                     }
                     SetLocalInt(oArea, sGapLoggedKey, TRUE);
                 }
+                DeleteLocalInt(oArea, sAreaPrefix + "count_reset");
             }
         }
 

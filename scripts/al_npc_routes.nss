@@ -223,6 +223,12 @@ void AL_QueueRoute(object oNpc, int nSlot, int bClearActions)
     {
         string sIndex = AL_GetRoutePrefix(nSlot) + IntToString(i);
         location lPoint = AL_GetRoutePoint(oNpc, nSlot, i);
+        object oPointArea = GetAreaFromLocation(lPoint);
+        if (!GetIsObjectValid(oPointArea))
+        {
+            i++;
+            continue;
+        }
         AssignCommand(oNpc, ActionMoveToLocation(lPoint));
         AssignCommand(oNpc, ActionDoCommand(AL_UpdateRouteIndex(oNpc, i)));
         location lJump = GetLocalLocation(oNpc, sIndex + "_jump");

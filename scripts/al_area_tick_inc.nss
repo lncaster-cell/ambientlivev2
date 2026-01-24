@@ -85,13 +85,14 @@ void AL_CacheAreaRoutes(object oArea)
             string sTag = GetTag(oObj);
             if (sTag != "")
             {
-                int nIndex = GetLocalInt(oObj, "al_route_index");
-                if (nIndex < 0)
+                if (!GetLocalInt(oObj, "al_route_index_set"))
                 {
                     AL_AreaDebugLog(oArea, "AL: waypoint " + sTag + " missing al_route_index; skipped.");
                     oObj = GetNextObjectInArea(oArea);
                     continue;
                 }
+
+                int nIndex = GetLocalInt(oObj, "al_route_index");
 
                 string sAreaPrefix = "al_route_" + sTag + "_";
                 string sCountResetKey = sAreaPrefix + "count_reset";

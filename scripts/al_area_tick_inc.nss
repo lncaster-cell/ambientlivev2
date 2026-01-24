@@ -59,11 +59,13 @@ void AL_CacheAreaRoutes(object oArea)
                         string sResetIndex = sResetPrefix + IntToString(iResetIndex);
                         DeleteLocalLocation(oArea, sResetIndex);
                         DeleteLocalInt(oArea, sResetIndex + "_activity");
+                        DeleteLocalInt(oArea, sResetIndex + "_set");
                         DeleteLocalLocation(oArea, sResetIndex + "_jump");
                         iResetIndex++;
                     }
                     DeleteLocalInt(oArea, sResetPrefix + "n");
                     DeleteLocalInt(oArea, sResetPrefix + "count");
+                    DeleteLocalInt(oArea, sResetPrefix + "count_reset");
                     DeleteLocalInt(oArea, sResetPrefix + "max");
                     DeleteLocalInt(oArea, sResetPrefix + "max_set");
                     DeleteLocalInt(oArea, sResetPrefix + "gap_logged");

@@ -86,6 +86,12 @@ void AL_CacheAreaRoutes(object oArea)
                     DeleteLocalInt(oArea, sResetPrefix + "max_set");
                     DeleteLocalInt(oArea, sResetPrefix + "gap_logged");
                     DeleteLocalInt(oArea, sResetPrefix + "idx_built");
+                    DeleteLocalInt(oArea, sResetPrefix + "has_index");
+                }
+
+                if (GetLocalInt(oResetObj, "al_route_index_set"))
+                {
+                    SetLocalInt(oArea, "al_route_" + sResetTag + "_has_index", TRUE);
                 }
             }
         }
@@ -102,21 +108,26 @@ void AL_CacheAreaRoutes(object oArea)
             string sTag = GetTag(oObj);
             if (sTag != "")
             {
-                if (!GetLocalInt(oObj, "al_route_index_set"))
+                string sAreaPrefix = "al_route_" + sTag + "_";
+                string sCountResetKey = sAreaPrefix + "count_reset";
+                int bRequiresIndex = GetLocalInt(oArea, sAreaPrefix + "has_index");
+                if (!GetLocalInt(oArea, sCountResetKey))
+                {
+                    SetLocalInt(oArea, sAreaPrefix + "count", 0);
+                    SetLocalInt(oArea, sCountResetKey, TRUE);
+                }
+
+                if (bRequiresIndex && !GetLocalInt(oObj, "al_route_index_set"))
                 {
                     AL_AreaDebugLog(oArea, "AL: waypoint " + sTag + " missing al_route_index; skipped.");
                     oObj = GetNextObjectInArea(oArea);
                     continue;
                 }
 
-                int nIndex = GetLocalInt(oObj, "al_route_index");
-
-                string sAreaPrefix = "al_route_" + sTag + "_";
-                string sCountResetKey = sAreaPrefix + "count_reset";
-                if (!GetLocalInt(oArea, sCountResetKey))
+                int nIndex = GetLocalInt(oArea, sAreaPrefix + "count");
+                if (bRequiresIndex)
                 {
-                    SetLocalInt(oArea, sAreaPrefix + "count", 0);
-                    SetLocalInt(oArea, sCountResetKey, TRUE);
+                    nIndex = GetLocalInt(oObj, "al_route_index");
                 }
                 string sIndex = sAreaPrefix + IntToString(nIndex);
                 string sIndexMarker = sIndex + "_set";

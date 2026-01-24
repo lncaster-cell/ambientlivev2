@@ -71,7 +71,6 @@ void AL_CacheAreaRoutes(object oArea)
                         DeleteLocalInt(oArea, sResetIndex + "_activity");
                         DeleteLocalInt(oArea, sResetIndex + "_set");
                         DeleteLocalLocation(oArea, sResetIndex + "_jump");
-                        DeleteLocalInt(oArea, sResetIndex + "_set");
                         iResetIndex++;
                     }
                     iResetIndex = 0;

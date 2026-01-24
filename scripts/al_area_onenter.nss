@@ -63,7 +63,6 @@ void main()
 
     SetLocalInt(oArea, "al_slot", AL_ComputeTimeSlot());
 
-    AL_CacheAreaRoutes(oArea);
     AL_CacheTrainingPartners(oArea);
     AL_SyncAreaNPCRegistry(oArea);
     AL_UnhideAndResyncRegisteredNPCs(oArea);

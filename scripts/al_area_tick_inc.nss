@@ -53,14 +53,31 @@ void AL_CacheAreaRoutes(object oArea)
 
                     string sResetPrefix = "al_route_" + sResetTag + "_";
                     int iExistingCount = GetLocalInt(oArea, sResetPrefix + "n");
+                    int iExistingMax = GetLocalInt(oArea, sResetPrefix + "max");
+                    if (!GetLocalInt(oArea, sResetPrefix + "max_set"))
+                    {
+                        iExistingMax = iExistingCount - 1;
+                    }
                     int iResetIndex = 0;
-                    while (iResetIndex < iExistingCount)
+                    int iResetLimit = iExistingMax + 1;
+                    if (iResetLimit < 0)
+                    {
+                        iResetLimit = 0;
+                    }
+                    while (iResetIndex < iResetLimit)
                     {
                         string sResetIndex = sResetPrefix + IntToString(iResetIndex);
                         DeleteLocalLocation(oArea, sResetIndex);
                         DeleteLocalInt(oArea, sResetIndex + "_activity");
                         DeleteLocalInt(oArea, sResetIndex + "_set");
                         DeleteLocalLocation(oArea, sResetIndex + "_jump");
+                        DeleteLocalInt(oArea, sResetIndex + "_set");
+                        iResetIndex++;
+                    }
+                    iResetIndex = 0;
+                    while (iResetIndex < iExistingCount)
+                    {
+                        DeleteLocalInt(oArea, sResetPrefix + "idx_" + IntToString(iResetIndex));
                         iResetIndex++;
                     }
                     DeleteLocalInt(oArea, sResetPrefix + "n");
@@ -69,6 +86,7 @@ void AL_CacheAreaRoutes(object oArea)
                     DeleteLocalInt(oArea, sResetPrefix + "max");
                     DeleteLocalInt(oArea, sResetPrefix + "max_set");
                     DeleteLocalInt(oArea, sResetPrefix + "gap_logged");
+                    DeleteLocalInt(oArea, sResetPrefix + "idx_built");
                 }
             }
         }
@@ -163,7 +181,6 @@ void AL_CacheAreaRoutes(object oArea)
 
                 SetLocalInt(oArea, sMaxKey, nMaxIndex);
                 SetLocalInt(oArea, sMaxSetKey, TRUE);
-                SetLocalInt(oArea, sAreaPrefix + "n", nMaxIndex + 1);
             }
         }
 
@@ -184,9 +201,27 @@ void AL_CacheAreaRoutes(object oArea)
                 {
                     int nCount = GetLocalInt(oArea, sAreaPrefix + "count");
                     int nMaxIndex = GetLocalInt(oArea, sAreaPrefix + "max");
+                    if (!GetLocalInt(oArea, sAreaPrefix + "max_set"))
+                    {
+                        nMaxIndex = -1;
+                    }
+                    int nDenseCount = 0;
+                    int iIndex = 0;
+                    while (iIndex <= nMaxIndex)
+                    {
+                        string sIndex = sAreaPrefix + IntToString(iIndex);
+                        if (GetLocalInt(oArea, sIndex + "_set"))
+                        {
+                            SetLocalInt(oArea, sAreaPrefix + "idx_" + IntToString(nDenseCount), iIndex);
+                            nDenseCount++;
+                        }
+                        iIndex++;
+                    }
+                    SetLocalInt(oArea, sAreaPrefix + "n", nDenseCount);
+                    SetLocalInt(oArea, sAreaPrefix + "idx_built", TRUE);
                     if (nCount > 0 && nCount != (nMaxIndex + 1))
                     {
-                        AL_AreaDebugLog(oArea, "AL: route tag " + sTag + " has gaps in al_route_index; missing indices will be empty.");
+                        AL_AreaDebugLog(oArea, "AL: route tag " + sTag + " has gaps in al_route_index; using dense list.");
                     }
                     SetLocalInt(oArea, sGapLoggedKey, TRUE);
                 }

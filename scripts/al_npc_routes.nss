@@ -115,13 +115,27 @@ int AL_CacheRouteFromTag(object oNpc, int nSlot, string sTag)
     string sPrefix = AL_GetRoutePrefix(nSlot);
     string sAreaPrefix = "al_route_" + sTag + "_";
     int iCount = GetLocalInt(oArea, sAreaPrefix + "n");
+    int bHasIndexList = GetLocalInt(oArea, sAreaPrefix + "idx_built");
     int i = 0;
+    int iCopied = 0;
 
     while (i < iCount)
     {
-        string sIndex = sPrefix + IntToString(i);
-        string sAreaIndex = sAreaPrefix + IntToString(i);
-        SetLocalLocation(oNpc, sIndex, GetLocalLocation(oArea, sAreaIndex));
+        int nAreaIndex = i;
+        if (bHasIndexList)
+        {
+            nAreaIndex = GetLocalInt(oArea, sAreaPrefix + "idx_" + IntToString(i));
+        }
+        string sIndex = sPrefix + IntToString(iCopied);
+        string sAreaIndex = sAreaPrefix + IntToString(nAreaIndex);
+        location lPoint = GetLocalLocation(oArea, sAreaIndex);
+        object oPointArea = GetAreaFromLocation(lPoint);
+        if (!GetIsObjectValid(oPointArea))
+        {
+            i++;
+            continue;
+        }
+        SetLocalLocation(oNpc, sIndex, lPoint);
         int nActivity = GetLocalInt(oArea, sAreaIndex + "_activity");
         if (nActivity > 0)
         {
@@ -139,17 +153,17 @@ int AL_CacheRouteFromTag(object oNpc, int nSlot, string sTag)
         {
             SetLocalLocation(oNpc, sIndex + "_jump", lJump);
         }
-
+        iCopied++;
         i++;
     }
 
     if (iCount > 0)
     {
-        SetLocalInt(oNpc, sPrefix + "n", iCount);
+        SetLocalInt(oNpc, sPrefix + "n", iCopied);
         SetLocalString(oNpc, AL_GetRouteTagKey(nSlot), sTag);
     }
 
-    return iCount;
+    return iCopied;
 }
 
 void AL_HandleRouteAreaTransition()

@@ -58,6 +58,14 @@ void AL_RegisterNPC(object oNpc)
 
     if (iCount >= AL_MAX_NPCS)
     {
+        if (GetLocalInt(oArea, "al_debug") == 1)
+        {
+            object oPc = GetFirstPC();
+            if (GetIsObjectValid(oPc))
+            {
+                SendMessageToPC(oPc, "AL: NPC registry full for area; registration skipped.");
+            }
+        }
         return;
     }
 

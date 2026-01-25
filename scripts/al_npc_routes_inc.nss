@@ -115,54 +115,37 @@ int AL_CacheRouteFromTag(object oNpc, int nSlot, string sTag)
     }
 
     string sPrefix = AL_GetRoutePrefix(nSlot);
+    string sAreaPrefix = "al_route_" + sTag + "_";
+    int nCount = GetLocalInt(oArea, sAreaPrefix + "n");
     int iCopied = 0;
-    object oObj = GetFirstObjectInArea(oArea);
 
-    while (GetIsObjectValid(oObj) && iCopied < AL_ROUTE_MAX_POINTS)
+    while (iCopied < nCount && iCopied < AL_ROUTE_MAX_POINTS)
     {
-        if (GetObjectType(oObj) == OBJECT_TYPE_WAYPOINT)
+        int nRealIndex = GetLocalInt(oArea, sAreaPrefix + "idx_" + IntToString(iCopied));
+        string sAreaIndex = sAreaPrefix + IntToString(nRealIndex);
+        string sNpcIndex = sPrefix + IntToString(iCopied);
+
+        SetLocalLocation(oNpc, sNpcIndex, GetLocalLocation(oArea, sAreaIndex));
+
+        int nActivity = GetLocalInt(oArea, sAreaIndex + "_activity");
+        if (nActivity > 0)
         {
-            if (GetTag(oObj) == sTag)
-            {
-                string sIndex = sPrefix + IntToString(iCopied);
-                SetLocalLocation(oNpc, sIndex, GetLocation(oObj));
-
-                int nActivity = GetLocalInt(oObj, "al_activity");
-                if (nActivity > 0)
-                {
-                    SetLocalInt(oNpc, sIndex + "_activity", nActivity);
-                }
-                else
-                {
-                    DeleteLocalInt(oNpc, sIndex + "_activity");
-                }
-
-                DeleteLocalLocation(oNpc, sIndex + "_jump");
-                location lJump = GetLocalLocation(oObj, "al_transition_location");
-                object oJumpArea = GetAreaFromLocation(lJump);
-                if (GetIsObjectValid(oJumpArea))
-                {
-                    SetLocalLocation(oNpc, sIndex + "_jump", lJump);
-                }
-                else
-                {
-                    object oTargetArea = GetLocalObject(oObj, "al_transition_area");
-                    if (GetIsObjectValid(oTargetArea))
-                    {
-                        float fX = GetLocalFloat(oObj, "al_transition_x");
-                        float fY = GetLocalFloat(oObj, "al_transition_y");
-                        float fZ = GetLocalFloat(oObj, "al_transition_z");
-                        float fFacing = GetLocalFloat(oObj, "al_transition_facing");
-                        location lResolvedJump = Location(oTargetArea, Vector(fX, fY, fZ), fFacing);
-                        SetLocalLocation(oNpc, sIndex + "_jump", lResolvedJump);
-                    }
-                }
-
-                iCopied++;
-            }
+            SetLocalInt(oNpc, sNpcIndex + "_activity", nActivity);
+        }
+        else
+        {
+            DeleteLocalInt(oNpc, sNpcIndex + "_activity");
         }
 
-        oObj = GetNextObjectInArea(oArea);
+        DeleteLocalLocation(oNpc, sNpcIndex + "_jump");
+        location lJump = GetLocalLocation(oArea, sAreaIndex + "_jump");
+        object oJumpArea = GetAreaFromLocation(lJump);
+        if (GetIsObjectValid(oJumpArea))
+        {
+            SetLocalLocation(oNpc, sNpcIndex + "_jump", lJump);
+        }
+
+        iCopied++;
     }
 
     if (iCopied > 0)

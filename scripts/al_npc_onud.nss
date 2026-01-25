@@ -25,8 +25,13 @@ int AL_ActivityUsesRoute(object oNpc, int nSlot)
     return AL_GetRouteCount(oNpc, nSlot) > 0;
 }
 
-int AL_GetRepeatAnimIntervalSeconds()
+int AL_GetRepeatAnimIntervalSeconds(int nActivity)
 {
+    if (nActivity == AL_ACT_NPC_STAND_CHAT)
+    {
+        return 3 + Random(6);
+    }
+
     return 15 + Random(16);
 }
 
@@ -203,7 +208,7 @@ void main()
 
     if (bShouldPlay)
     {
-        int nIntervalSeconds = AL_GetRepeatAnimIntervalSeconds();
+        int nIntervalSeconds = AL_GetRepeatAnimIntervalSeconds(nActivity);
         AL_ApplyActivityForSlot(oNpc, nSlot);
         AL_MarkAnimationApplied(oNpc, nIntervalSeconds);
     }

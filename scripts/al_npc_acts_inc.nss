@@ -107,6 +107,79 @@ string AL_SelectRandomToken(string sList)
     return sSelected;
 }
 
+int AL_GetAnimSeed(object oNpc)
+{
+    int nSeed = GetLocalInt(oNpc, "al_anim_seed");
+    if (nSeed > 0)
+    {
+        return nSeed;
+    }
+
+    nSeed = Random(10000) + 1;
+    SetLocalInt(oNpc, "al_anim_seed", nSeed);
+    return nSeed;
+}
+
+string AL_SelectRandomTokenWithSeed(string sList, int nSeed)
+{
+    if (sList == "")
+    {
+        return "";
+    }
+
+    int i = 0;
+    int iLen = GetStringLength(sList);
+    int iStart = 0;
+    int iToken = 0;
+
+    while (i <= iLen)
+    {
+        if (i == iLen || GetSubString(sList, i, 1) == ",")
+        {
+            string sToken = AL_TrimToken(GetSubString(sList, iStart, i - iStart));
+            if (sToken != "")
+            {
+                iToken++;
+            }
+            iStart = i + 1;
+        }
+        i++;
+    }
+
+    if (iToken <= 0)
+    {
+        return "";
+    }
+
+    int iPick = Random(iToken);
+    iPick = (iPick + nSeed) % iToken;
+
+    i = 0;
+    iLen = GetStringLength(sList);
+    iStart = 0;
+    iToken = 0;
+
+    while (i <= iLen)
+    {
+        if (i == iLen || GetSubString(sList, i, 1) == ",")
+        {
+            string sToken = AL_TrimToken(GetSubString(sList, iStart, i - iStart));
+            if (sToken != "")
+            {
+                if (iToken == iPick)
+                {
+                    return sToken;
+                }
+                iToken++;
+            }
+            iStart = i + 1;
+        }
+        i++;
+    }
+
+    return "";
+}
+
 int AL_ShouldLoopCustomAnimation(int nActivity)
 {
     if (nActivity == AL_ACT_NPC_MIDNIGHT_BED
@@ -218,10 +291,11 @@ void AL_ApplyActivityForSlot(object oNpc, int nSlot)
         ? AL_GetLocateWrapperCustomAnims(nActivity)
         : AL_GetActivityCustomAnims(nActivity);
     string sNumeric = AL_GetActivityNumericAnims(nActivity);
+    int nAnimSeed = AL_GetAnimSeed(oNpc);
 
     if (sCustom != "")
     {
-        string sAnim = AL_SelectRandomToken(sCustom);
+        string sAnim = AL_SelectRandomTokenWithSeed(sCustom, nAnimSeed);
         int bLooping = AL_ShouldLoopCustomAnimation(nActivity);
         AL_PlayCustomAnimation(oNpc, sAnim, bLooping);
         return;
@@ -229,7 +303,7 @@ void AL_ApplyActivityForSlot(object oNpc, int nSlot)
 
     if (sNumeric != "")
     {
-        string sAnimId = AL_SelectRandomToken(sNumeric);
+        string sAnimId = AL_SelectRandomTokenWithSeed(sNumeric, nAnimSeed);
         int nAnimId = StringToInt(sAnimId);
         AL_PlayNumericAnimation(nAnimId);
     }

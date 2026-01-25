@@ -1,6 +1,5 @@
 // NPC OnSpawn: attach to NPC OnSpawn in the toolset.
 
-#include "al_constants_inc"
 #include "al_npc_acts_inc"
 #include "al_npc_reg_inc"
 

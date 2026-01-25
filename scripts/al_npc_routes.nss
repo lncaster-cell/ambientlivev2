@@ -117,37 +117,84 @@ int AL_CacheRouteFromTag(object oNpc, int nSlot, string sTag)
     string sPrefix = AL_GetRoutePrefix(nSlot);
     string sAreaPrefix = "al_route_" + sTag + "_";
     // Route points are cached on the area during activation (AL_CacheAreaRoutes).
-    int nRouteCount = GetLocalInt(oArea, sAreaPrefix + "n");
     int iCopied = 0;
+    int bIdxBuilt = GetLocalInt(oArea, sAreaPrefix + "idx_built");
 
-    while (iCopied < nRouteCount && iCopied < AL_ROUTE_MAX_POINTS)
+    if (bIdxBuilt)
     {
-        int nIndex = GetLocalInt(oArea, sAreaPrefix + "idx_" + IntToString(iCopied));
-        string sAreaIndex = sAreaPrefix + IntToString(nIndex);
-        string sIndex = sPrefix + IntToString(iCopied);
-        SetLocalLocation(oNpc, sIndex, GetLocalLocation(oArea, sAreaIndex));
+        int nRouteCount = GetLocalInt(oArea, sAreaPrefix + "n");
 
-        int nActivity = GetLocalInt(oArea, sAreaIndex + "_activity");
-        if (nActivity > 0)
+        while (iCopied < nRouteCount && iCopied < AL_ROUTE_MAX_POINTS)
         {
-            SetLocalInt(oNpc, sIndex + "_activity", nActivity);
-        }
-        else
-        {
-            DeleteLocalInt(oNpc, sIndex + "_activity");
-        }
+            int nIndex = GetLocalInt(oArea, sAreaPrefix + "idx_" + IntToString(iCopied));
+            string sAreaIndex = sAreaPrefix + IntToString(nIndex);
+            string sIndex = sPrefix + IntToString(iCopied);
+            SetLocalLocation(oNpc, sIndex, GetLocalLocation(oArea, sAreaIndex));
 
-        location lJump = GetLocalLocation(oArea, sAreaIndex + "_jump");
-        if (GetIsObjectValid(GetAreaFromLocation(lJump)))
-        {
-            SetLocalLocation(oNpc, sIndex + "_jump", lJump);
-        }
-        else
-        {
-            DeleteLocalLocation(oNpc, sIndex + "_jump");
-        }
+            int nActivity = GetLocalInt(oArea, sAreaIndex + "_activity");
+            if (nActivity > 0)
+            {
+                SetLocalInt(oNpc, sIndex + "_activity", nActivity);
+            }
+            else
+            {
+                DeleteLocalInt(oNpc, sIndex + "_activity");
+            }
 
-        iCopied++;
+            location lJump = GetLocalLocation(oArea, sAreaIndex + "_jump");
+            if (GetIsObjectValid(GetAreaFromLocation(lJump)))
+            {
+                SetLocalLocation(oNpc, sIndex + "_jump", lJump);
+            }
+            else
+            {
+                DeleteLocalLocation(oNpc, sIndex + "_jump");
+            }
+
+            iCopied++;
+        }
+    }
+    else
+    {
+        int nMaxIndex = GetLocalInt(oArea, sAreaPrefix + "max");
+        if (!GetLocalInt(oArea, sAreaPrefix + "max_set"))
+        {
+            nMaxIndex = -1;
+        }
+        int iIndex = 0;
+        while (iIndex <= nMaxIndex && iCopied < AL_ROUTE_MAX_POINTS)
+        {
+            string sAreaIndex = sAreaPrefix + IntToString(iIndex);
+            if (GetLocalInt(oArea, sAreaIndex + "_set"))
+            {
+                string sIndex = sPrefix + IntToString(iCopied);
+                SetLocalLocation(oNpc, sIndex, GetLocalLocation(oArea, sAreaIndex));
+
+                int nActivity = GetLocalInt(oArea, sAreaIndex + "_activity");
+                if (nActivity > 0)
+                {
+                    SetLocalInt(oNpc, sIndex + "_activity", nActivity);
+                }
+                else
+                {
+                    DeleteLocalInt(oNpc, sIndex + "_activity");
+                }
+
+                location lJump = GetLocalLocation(oArea, sAreaIndex + "_jump");
+                if (GetIsObjectValid(GetAreaFromLocation(lJump)))
+                {
+                    SetLocalLocation(oNpc, sIndex + "_jump", lJump);
+                }
+                else
+                {
+                    DeleteLocalLocation(oNpc, sIndex + "_jump");
+                }
+
+                iCopied++;
+            }
+
+            iIndex++;
+        }
     }
 
     if (iCopied > 0)

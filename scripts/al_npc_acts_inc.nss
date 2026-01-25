@@ -2,7 +2,7 @@
 
 #include "al_acts_inc"
 #include "al_constants_inc"
-#include "al_npc_routes"
+#include "al_npc_routes_inc"
 
 int AL_GetRoutePointActivity(object oNpc, int nSlot, int iIndex);
 

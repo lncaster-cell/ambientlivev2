@@ -2,7 +2,6 @@
 
 #include "al_constants_inc"
 #include "al_area_tick_inc"
-#include "al_npc_reg_inc"
 
 void AL_CacheTrainingPartners(object oArea)
 {

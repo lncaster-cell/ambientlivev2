@@ -63,6 +63,7 @@ void main()
     SetLocalInt(oArea, "al_slot", AL_ComputeTimeSlot());
 
     AL_CacheTrainingPartners(oArea);
+    AL_CacheAreaRoutes(oArea);
     AL_SyncAreaNPCRegistry(oArea);
     AL_UnhideAndResyncRegisteredNPCs(oArea);
     DelayCommand(AL_TICK_PERIOD, AreaTick(oArea, iToken));
